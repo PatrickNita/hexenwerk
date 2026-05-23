@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCursorTheme } from "@/components/cursor-provider";
 import type { CursorTheme } from "@/lib/cursor-themes";
 
@@ -26,12 +26,20 @@ function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+function isCoarsePointerOrMobile() {
+  return (
+    window.matchMedia("(max-width: 767px)").matches ||
+    window.matchMedia("(hover: none) and (pointer: coarse)").matches
+  );
+}
+
 function pickColor(theme: CursorTheme) {
   return theme.particles[Math.floor(Math.random() * theme.particles.length)];
 }
 
 export default function CursorTrail() {
   const { theme } = useCursorTheme();
+  const [enabled, setEnabled] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const embersRef = useRef<Ember[]>([]);
   const rafRef = useRef<number | null>(null);
@@ -42,10 +50,25 @@ export default function CursorTrail() {
   const reducedMotionRef = useRef(false);
 
   useEffect(() => {
+    const updateEnabled = () => {
+      setEnabled(!isCoarsePointerOrMobile());
+    };
+
+    updateEnabled();
+    window.addEventListener("resize", updateEnabled);
+
+    return () => window.removeEventListener("resize", updateEnabled);
+  }, []);
+
+  useEffect(() => {
     themeRef.current = theme;
   }, [theme]);
 
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
     reducedMotionRef.current = prefersReducedMotion();
 
     const canvas = canvasRef.current;
@@ -198,7 +221,11 @@ export default function CursorTrail() {
         cancelAnimationFrame(rafRef.current);
       }
     };
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) {
+    return null;
+  }
 
   return (
     <canvas

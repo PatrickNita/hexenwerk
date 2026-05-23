@@ -1,6 +1,6 @@
 "use client";
 
-import { getCharSlotWidth, getVariantsForChar } from "@/lib/char-variants";
+import { getVariantsForChar } from "@/lib/char-variants";
 import { useEffect, useRef, useState } from "react";
 
 const PIXEL_FONT = "var(--font-geist-pixel-grid)";
@@ -136,7 +136,7 @@ export default function PixelHeading() {
   return (
     <div className="hero-heading text-center" aria-label={ARIA_LABEL}>
       <div
-        className="flex flex-wrap justify-center leading-none tracking-[0.12em] lg:tracking-[0.14em]"
+        className="hero-heading__line"
         style={{ fontFamily: PIXEL_FONT }}
         aria-hidden
       >
@@ -145,7 +145,7 @@ export default function PixelHeading() {
             return (
               <span
                 key={`${charIndex}-space`}
-                className="inline-block w-[0.35em]"
+                className="hero-heading__cell hero-heading__cell--space"
               />
             );
           }
@@ -157,11 +157,7 @@ export default function PixelHeading() {
           return (
             <span
               key={`${charIndex}-${char}`}
-              className="inline-block text-center"
-              style={{
-                width: getCharSlotWidth(char),
-                minWidth: getCharSlotWidth(char),
-              }}
+              className="hero-heading__cell"
             >
               {displayChar}
             </span>

@@ -7,7 +7,7 @@ export default function ScrollAwareHeader() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const section = document.getElementById("s2");
+    const section = document.getElementById("s1");
     const root = document.querySelector(".snap-root");
 
     if (!section || !root) {
@@ -16,11 +16,11 @@ export default function ScrollAwareHeader() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setVisible(entry.isIntersecting);
+        setVisible(!entry.isIntersecting);
       },
       {
         root,
-        threshold: 0.05,
+        threshold: 0.15,
       },
     );
 

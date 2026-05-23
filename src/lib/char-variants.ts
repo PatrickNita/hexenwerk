@@ -1,23 +1,4 @@
-const A_VARIANTS = [
-  "A",
-  "À",
-  "Á",
-  "Â",
-  "Ã",
-  "Ä",
-  "Å",
-  "Ā",
-  "Ă",
-  "Ą",
-  "Ǎ",
-  "Ȁ",
-  "Ȃ",
-  "Ȧ",
-  "Ǟ",
-  "Ǡ",
-  "Ǻ",
-  "Ḁ",
-] as const;
+// Variants scoped to glyphs present in Geist Pixel Grid (GeistPixel-Grid.woff2).
 
 const CONSERVATIVE_VARIANTS: Record<string, readonly string[]> = {
   "1": ["1"],
@@ -26,14 +7,14 @@ const CONSERVATIVE_VARIANTS: Record<string, readonly string[]> = {
 };
 
 const CHAR_VARIANTS: Record<string, readonly string[]> = {
-  C: ["C", "Ç", "Ć", "Ĉ", "Ċ", "Č", "Ḉ", "Ȼ"],
-  I: ["I", "Ì", "Í", "Î", "Ï", "Ĩ", "Ī", "Ĭ", "Į", "İ", "Ȉ", "Ȋ", "Ḭ", "Ḯ"],
-  G: ["G", "Ĝ", "Ğ", "Ġ", "Ģ", "Ǥ", "Ǧ", "Ǵ", "Ḡ"],
-  A: A_VARIANTS,
-  R: ["R", "Ŕ", "Ř", "Ŗ", "Ȑ", "Ȓ", "Ṙ", "Ṛ", "Ṝ", "Ṟ"],
-  L: ["L", "Ŀ", "Ĺ", "Ľ", "Ļ", "Ł", "Ƚ", "Ḷ", "Ḹ"],
-  E: ["E", "È", "É", "Ê", "Ë", "Ē", "Ĕ", "Ė", "Ę", "Ě", "Ȅ", "Ȇ"],
-  F: ["F", "Ḟ"],
+  C: ["C", "Ç", "Ć", "Ĉ", "Ċ", "Č"],
+  I: ["I", "Ì", "Í", "Î", "Ï", "Ĩ", "Ī", "Į", "İ"],
+  G: ["G", "Ĝ", "Ğ", "Ġ", "Ģ", "Ḡ"],
+  A: ["A", "À", "Á", "Â", "Ã", "Ä", "Å", "Ā", "Ă", "Ą", "Ǎ"],
+  R: ["R", "Ŕ", "Ř", "Ŗ"],
+  L: ["L", "Ĺ", "Ľ", "Ļ", "Ł"],
+  E: ["E", "È", "É", "Ê", "Ë", "Ē", "Ė", "Ę", "Ě"],
+  F: ["F"],
 };
 
 const CONSERVATIVE_PREFIX = "100%";
@@ -54,16 +35,4 @@ export function getVariantsForChar(
   const key = char.toUpperCase();
 
   return CHAR_VARIANTS[key] ?? [char];
-}
-
-export function getCharSlotWidth(char: string): string {
-  if (char === "%") {
-    return "1.25ch";
-  }
-
-  if (char === " ") {
-    return "0.35em";
-  }
-
-  return "1.15ch";
 }
