@@ -95,11 +95,6 @@ export default function ProductLines() {
                 setActiveLineId(line.id);
               }
             }}
-            onPointerLeave={(event) => {
-              if (event.pointerType === "mouse") {
-                setActiveLineId(null);
-              }
-            }}
             onClick={() => togglePanel(line.index, line.id)}
             onKeyDown={(event) => handleKeyDown(event, line.index, line.id)}
           >

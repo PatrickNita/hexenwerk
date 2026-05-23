@@ -32,7 +32,7 @@ export default function Home() {
 
         <section id="s2" className="snap-section snap-section--lines">
           <div className="section-inner section-inner--lines">
-            <div className="mb-4 flex items-end justify-between border-b-2 border-border pb-3 md:mb-6">
+            <div className="mb-4 flex min-w-0 items-end justify-between border-b-2 border-border pb-3 md:mb-6">
               <h2 className="text-xs uppercase tracking-[0.3em] md:text-sm">
                 Product Lines
               </h2>

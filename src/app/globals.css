@@ -463,6 +463,7 @@ body::before {
   height: calc(100dvh - var(--header-h) - 5.5rem);
   min-height: 280px;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .line-panel {
@@ -470,6 +471,7 @@ body::before {
   overflow: hidden;
   background: var(--surface);
   border: 3px solid var(--border);
+  box-sizing: border-box;
   --line-accent: var(--border-hover);
   --line-glow: var(--foreground);
   transition:
@@ -617,17 +619,27 @@ body::before {
   .snap-section--lines {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+    box-sizing: border-box;
   }
 
   .section-inner.section-inner--lines {
     display: grid;
     grid-template-rows: auto 1fr;
+    justify-content: unset;
     flex: 1;
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
     min-height: calc(100dvh - var(--header-h));
     height: calc(100dvh - var(--header-h));
     box-sizing: border-box;
-    padding-inline: 1rem;
+    padding: calc(var(--header-h) + 1rem)
+      max(1rem, env(safe-area-inset-right))
+      1.5rem
+      max(1rem, env(safe-area-inset-left));
     overflow-x: clip;
   }
 
@@ -637,15 +649,17 @@ body::before {
     width: 100%;
     height: 100%;
     min-height: 0;
+    min-width: 0;
+    max-width: 100%;
     overflow: hidden;
     box-sizing: border-box;
-    max-width: 100%;
   }
 
   .line-panel {
     flex: 1;
     width: 100%;
     min-height: 0;
+    min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
     transition:
@@ -661,6 +675,8 @@ body::before {
     gap: 0.75rem;
     height: 100%;
     min-height: 0;
+    min-width: 0;
+    max-width: 100%;
     padding: 0.75rem 1rem;
   }
 
@@ -677,7 +693,7 @@ body::before {
     flex: 0.5;
     width: 100%;
     min-width: 0;
-    max-width: none;
+    max-width: 100%;
     border-color: rgb(255 255 255 / 0.1);
   }
 
