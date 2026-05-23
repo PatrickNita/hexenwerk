@@ -10,22 +10,21 @@ Next.js site for HEXENWERK TOBACCO — dark industrial brutalist brand showcase.
 - Tailwind CSS
 - Geist (Vercel)
 
-## Local development
+## Local workflow
 
-```bash
-npm run install:all
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
-## Production check
+After changes, run install, build, and start (full local production cycle):
 
 ```bash
 npm run install:all
 npm run build
-npm run start
+npm start
 ```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+If port 3000 is already in use, stop the existing process before running `npm start`.
+
+`npm run dev` is available for hot-reload during rapid iteration, but the default workflow is install + build + start.
 
 ## GitHub + Vercel
 

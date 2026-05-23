@@ -1,110 +1,76 @@
-﻿import Image from "next/image";
-
-const lines = [
-  {
-    index: "01",
-    name: "Beverage",
-    blurb: "Bar and mixology-forward profiles.",
-  },
-  {
-    index: "02",
-    name: "Botanical",
-    blurb: "Herbal depth, raw and structured.",
-  },
-  {
-    index: "03",
-    name: "Essence",
-    blurb: "Concentrated character, stripped back.",
-  },
-  {
-    index: "04",
-    name: "Gastronomy",
-    blurb: "Savory alignment for the table.",
-  },
-  {
-    index: "05",
-    name: "Perfumery",
-    blurb: "Aromatic precision, dark florals.",
-  },
-] as const;
+﻿import HeroBrand from "@/components/hero-brand";
+import HeroSideArt from "@/components/hero-side-art";
+import HeroSpec from "@/components/hero-spec";
+import ProductLines from "@/components/product-lines";
+import ScrollAwareHeader from "@/components/scroll-aware-header";
 
 export default function Home() {
   const year = new Date().getFullYear();
 
   return (
-    <div className="relative z-10 flex min-h-full flex-col font-sans">
-      <header className="flex items-center justify-between border-b border-border px-6 py-4 md:px-10">
-        <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-foreground">
-          Hexenwerk / Tobacco
-        </p>
-        <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-muted">
-          05 Lines
-        </p>
-      </header>
+    <>
+      <ScrollAwareHeader />
 
-      <section className="flex flex-col items-center justify-center px-6 py-24 md:py-32 lg:py-40">
-        <Image
-          src="/assets/brand/hexenwerk-logo.webp"
-          alt="HEXENWERK"
-          width={640}
-          height={200}
-          priority
-          className="h-auto w-full max-w-xl md:max-w-2xl"
-        />
-        <p className="mt-12 max-w-md text-center text-[11px] uppercase tracking-[0.45em] text-muted">
-          Five distinct lines. One standard.
-        </p>
-      </section>
+      <main className="snap-root">
+        <section id="s1" className="snap-section snap-section--hero">
+          <div className="hero-top">
+            <div className="hero-top__cell hero-top__cell--side">
+              <HeroSideArt flip />
+            </div>
+            <div className="hero-top__cell hero-top__cell--brand">
+              <HeroBrand />
+            </div>
+            <div className="hero-top__cell hero-top__cell--side">
+              <HeroSideArt />
+            </div>
+          </div>
+          <div className="hero-stage">
+            <HeroSpec />
+          </div>
+          <span className="scroll-hint">↓ 02</span>
+        </section>
 
-      <hr className="border-border" />
+        <section id="s2" className="snap-section snap-section--lines">
+          <div className="section-inner section-inner--lines">
+            <div className="mb-4 flex items-end justify-between border-b-2 border-border pb-3 md:mb-6">
+              <h2 className="text-xs uppercase tracking-[0.3em] md:text-sm">
+                Product Lines
+              </h2>
+              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted">
+                Click
+              </span>
+            </div>
+            <ProductLines />
+          </div>
+        </section>
 
-      <section className="px-6 py-16 md:px-10 md:py-20">
-        <div className="mb-10 flex items-end justify-between border-b border-border pb-4">
-          <h2 className="text-sm uppercase tracking-[0.3em] text-foreground">
-            Product Lines
-          </h2>
-          <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted">
-            Index 01-05
-          </span>
-        </div>
+        <section id="s3" className="snap-section">
+          <div className="section-inner items-center text-center">
+            <div className="mx-auto max-w-lg">
+              <h2 className="font-mono text-2xl uppercase tracking-[0.3em] md:text-4xl">
+                One Standard.
+              </h2>
+              <p className="mt-8 text-sm leading-relaxed text-muted md:text-base">
+                Raw leaf. No compromise.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted md:text-base">
+                Five lines. One source.
+              </p>
+            </div>
+          </div>
+        </section>
 
-        <ul className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
-          {lines.map((line) => (
-            <li
-              key={line.index}
-              className="group flex flex-col bg-surface transition-colors hover:bg-surface-hover"
-            >
-              <div className="flex flex-1 flex-col p-6 md:p-8">
-                <span className="font-mono text-[11px] tracking-[0.2em] text-muted">
-                  {line.index}
-                </span>
-                <h3 className="mt-4 text-lg uppercase tracking-[0.2em] text-foreground">
-                  {line.name}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">
-                  {line.blurb}
-                </p>
-                <div
-                  className="hatch mt-8 flex min-h-32 items-end border border-border p-4 transition-colors group-hover:border-border-hover"
-                  aria-hidden
-                >
-                  <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted/60">
-                    {line.name}
-                  </span>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <hr className="border-border" />
-
-      <footer className="mt-auto border-t border-border px-6 py-6 md:px-10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-muted">
-          © {year} Hexenwerk Tobacco
-        </p>
-      </footer>
-    </div>
+        <section id="s4" className="snap-section">
+          <div className="section-inner section-slab justify-end">
+            <div className="w-full">
+              <div className="ember-rule mb-8" aria-hidden />
+              <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-muted">
+                © {year} Hexenwerk Tobacco
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
