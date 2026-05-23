@@ -10,7 +10,7 @@ type SpecRow = {
 };
 
 const SPEC_ROWS: SpecRow[] = [
-  { label: "Type", value: "Ligero/Seco" },
+  { label: "Type", value: "Ligero / Seco" },
   { label: "Sort", value: "Criollo 98 / Piloto Cubano" },
   { label: "Leaf Origin", value: "Dominican Republic" },
   { label: "Origin", value: "Single Origin" },

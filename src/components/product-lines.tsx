@@ -58,7 +58,9 @@ export default function ProductLines() {
   const togglePanel = (index: string, lineId: string) => {
     setOpenIndex((current) => {
       const next = current === index ? null : index;
-      setActiveLineId(next ? lineId : null);
+      if (next) {
+        setActiveLineId(lineId);
+      }
       return next;
     });
   };
@@ -102,6 +104,24 @@ export default function ProductLines() {
               <span className="line-index-box">{line.index}</span>
               <h3 className="line-name">{line.name}</h3>
               <p className="line-blurb">{line.blurb}</p>
+              {isOpen ? (
+                <div className="line-panel-actions">
+                  <button
+                    type="button"
+                    className="line-panel-btn line-panel-btn--line"
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    Explore {line.name}
+                  </button>
+                  <button
+                    type="button"
+                    className="line-panel-btn line-panel-btn--all"
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    Explore All Products
+                  </button>
+                </div>
+              ) : null}
             </div>
           </li>
         );

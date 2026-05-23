@@ -170,20 +170,12 @@ export default function CursorTrail() {
       ctx.globalAlpha = 1;
 
       if (x >= 0 && y >= 0) {
-        const tickColor = activeTheme.tick;
         const coreColor = activeTheme.core;
         const hotColor = activeTheme.hot;
         const clickable = isClickableRef.current;
         const coreSize = clickable ? 6 : 3;
         const hotSize = clickable ? 2 : 1;
         const coreOffset = Math.floor(coreSize / 2);
-
-        ctx.fillStyle = tickColor;
-        ctx.globalAlpha = 0.5;
-        ctx.fillRect(x, y - 8, 1, 4);
-        ctx.fillRect(x, y + 4, 1, 4);
-        ctx.fillRect(x - 8, y, 4, 1);
-        ctx.fillRect(x + 4, y, 4, 1);
 
         ctx.globalAlpha = 1;
         ctx.fillStyle = coreColor;

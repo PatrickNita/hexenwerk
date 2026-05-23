@@ -3,6 +3,8 @@ import HeroSideArt from "@/components/hero-side-art";
 import HeroSpec from "@/components/hero-spec";
 import ProductLines from "@/components/product-lines";
 import ScrollAwareHeader from "@/components/scroll-aware-header";
+import SectionCrumb from "@/components/section-crumb";
+import Image from "next/image";
 
 export default function Home() {
   const year = new Date().getFullYear();
@@ -30,39 +32,54 @@ export default function Home() {
           <span className="scroll-hint">↓ 02</span>
         </section>
 
-        <section id="s2" className="snap-section snap-section--lines">
-          <div className="section-inner section-inner--lines">
-            <div className="mb-4 flex min-w-0 items-end justify-between border-b-2 border-border pb-3 md:mb-6">
-              <h2 className="text-xs uppercase tracking-[0.3em] md:text-sm">
-                Product Lines
+        <section id="s2" className="snap-section snap-section--statement">
+          <div className="statement-crumb">
+            <SectionCrumb label="The Product" meta="02" />
+          </div>
+          <div className="statement-upper">
+            <div className="statement-upper__content">
+              <h2 className="statement-headline">
+                HEXENWERK - 100% CIGAR LEAF HOOKAH TOBACCO
               </h2>
-              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted">
-                Click
-              </span>
+              <p className="statement-body">
+                Single-origin cigar leaf. No glycerin. No molasses. Built for
+                heat, not compromise.
+              </p>
+              <div className="statement-product-image">
+                <Image
+                  src="/assets/section02/section02_product.webp"
+                  alt=""
+                  fill
+                  unoptimized
+                  className="statement-product-image__img"
+                  sizes="(max-width: 768px) 100vw, 48rem"
+                />
+              </div>
             </div>
+          </div>
+          <div className="statement-lower">
+            <Image
+              src="/assets/section02/section02.webp"
+              alt=""
+              fill
+              unoptimized
+              className="statement-image"
+              sizes="100vw"
+            />
+          </div>
+        </section>
+
+        <section id="s3" className="snap-section snap-section--lines">
+          <div className="section-inner section-inner--lines">
+            <SectionCrumb label="Product Lines" meta="03" />
             <ProductLines />
           </div>
         </section>
 
-        <section id="s3" className="snap-section">
-          <div className="section-inner items-center text-center">
-            <div className="mx-auto max-w-lg">
-              <h2 className="font-mono text-2xl uppercase tracking-[0.3em] md:text-4xl">
-                One Standard.
-              </h2>
-              <p className="mt-8 text-sm leading-relaxed text-muted md:text-base">
-                Raw leaf. No compromise.
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-muted md:text-base">
-                Five lines. One source.
-              </p>
-            </div>
-          </div>
-        </section>
-
         <section id="s4" className="snap-section">
-          <div className="section-inner section-slab justify-end">
-            <div className="w-full">
+          <div className="section-inner section-slab">
+            <SectionCrumb label="Legal" meta="04" />
+            <div className="mt-auto w-full">
               <div className="ember-rule mb-8" aria-hidden />
               <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-muted">
                 © {year} Hexenwerk Tobacco
