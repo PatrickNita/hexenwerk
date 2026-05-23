@@ -55,17 +55,22 @@ export default function ProductLines() {
     });
   }, [openIndex]);
 
-  const togglePanel = (index: string) => {
-    setOpenIndex((current) => (current === index ? null : index));
+  const togglePanel = (index: string, lineId: string) => {
+    setOpenIndex((current) => {
+      const next = current === index ? null : index;
+      setActiveLineId(next ? lineId : null);
+      return next;
+    });
   };
 
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLLIElement>,
     index: string,
+    lineId: string,
   ) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      togglePanel(index);
+      togglePanel(index, lineId);
     }
   };
 
@@ -85,9 +90,18 @@ export default function ProductLines() {
             role="button"
             tabIndex={0}
             aria-expanded={isOpen}
-            onMouseEnter={() => setActiveLineId(line.id)}
-            onClick={() => togglePanel(line.index)}
-            onKeyDown={(event) => handleKeyDown(event, line.index)}
+            onPointerEnter={(event) => {
+              if (event.pointerType === "mouse") {
+                setActiveLineId(line.id);
+              }
+            }}
+            onPointerLeave={(event) => {
+              if (event.pointerType === "mouse") {
+                setActiveLineId(null);
+              }
+            }}
+            onClick={() => togglePanel(line.index, line.id)}
+            onKeyDown={(event) => handleKeyDown(event, line.index, line.id)}
           >
             <div className="line-panel-inner">
               <span className="line-index-box">{line.index}</span>

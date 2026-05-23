@@ -504,15 +504,17 @@ body::before {
   --line-glow: #fffef8;
 }
 
-.line-panel:hover:not(.line-panel--open) {
-  border-color: var(--line-accent);
-  background: color-mix(in srgb, var(--line-glow) 8%, var(--surface));
-  box-shadow: inset 0 3px 0 0 var(--line-accent);
-}
+@media (hover: hover) and (pointer: fine) {
+  .line-panel:hover:not(.line-panel--open) {
+    border-color: var(--line-accent);
+    background: color-mix(in srgb, var(--line-glow) 8%, var(--surface));
+    box-shadow: inset 0 3px 0 0 var(--line-accent);
+  }
 
-.line-panel:hover:not(.line-panel--open) .line-index-box {
-  border-color: var(--line-accent);
-  color: var(--foreground);
+  .line-panel:hover:not(.line-panel--open) .line-index-box {
+    border-color: var(--line-accent);
+    color: var(--foreground);
+  }
 }
 
 .lines-track:has(.line-panel--open) .line-panel:not(.line-panel--open) {
@@ -625,6 +627,8 @@ body::before {
     min-height: calc(100dvh - var(--header-h));
     height: calc(100dvh - var(--header-h));
     box-sizing: border-box;
+    padding-inline: 1rem;
+    overflow-x: clip;
   }
 
   .lines-track {
@@ -634,13 +638,16 @@ body::before {
     height: 100%;
     min-height: 0;
     overflow: hidden;
+    box-sizing: border-box;
+    max-width: 100%;
   }
 
   .line-panel {
     flex: 1;
     width: 100%;
     min-height: 0;
-    max-width: none;
+    max-width: 100%;
+    box-sizing: border-box;
     transition:
       flex 100ms steps(2, end),
       background-color 100ms steps(2, end),
@@ -682,7 +689,8 @@ body::before {
     flex: 5;
     width: 100%;
     min-width: 0;
-    max-width: none;
+    max-width: 100%;
+    box-shadow: inset 0 3px 0 0 var(--line-accent);
   }
 
   .line-panel--open .line-panel-inner {
