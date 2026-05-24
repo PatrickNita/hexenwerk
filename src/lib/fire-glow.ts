@@ -136,6 +136,10 @@ function getPhasePalettes(lineId?: string | null): [GlowStops, GlowStops] {
   return [GLOW_DARK_ORANGE, GLOW_DARK_BROWN];
 }
 
+function paletteForPhase(palettes: [GlowStops, GlowStops], phase: GlowPhase) {
+  return phase === "darkBrown" ? palettes[1] : palettes[0];
+}
+
 function pickCyclePhase(now: number): {
   phase: GlowPhase;
   blend: number;
@@ -169,15 +173,17 @@ export function computeFireGlowCycle(
   now: number,
   lineId?: string | null,
 ): FireGlowState {
-  const [phaseA, phaseB] = getPhasePalettes(lineId);
+  const palettes = getPhasePalettes(lineId);
   const { phase, blend, nextPhase } = pickCyclePhase(now);
+  const from = paletteForPhase(palettes, phase);
+  const to = paletteForPhase(palettes, nextPhase);
   const t = blend * blend * (3 - 2 * blend);
 
   return {
     phase: blend > 0.5 ? nextPhase : phase,
-    hot: mixHex(phaseA.hot, phaseB.hot, t),
-    mid: mixHex(phaseA.mid, phaseB.mid, t),
-    cool: mixHex(phaseA.cool, phaseB.cool, t),
+    hot: mixHex(from.hot, to.hot, t),
+    mid: mixHex(from.mid, to.mid, t),
+    cool: mixHex(from.cool, to.cool, t),
     brightness: glowBrightness(lineId),
     strength: GLOW_STRENGTH,
   };

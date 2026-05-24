@@ -49,7 +49,7 @@ export default function StatementLightningLayer() {
         cancelAnimationFrame(rafRef.current);
       }
     };
-  }, [activeLineId]);
+  }, []);
 
   return (
     <div
