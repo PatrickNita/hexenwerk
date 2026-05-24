@@ -218,6 +218,7 @@ body::before {
   position: relative;
   width: 100%;
   height: 100%;
+  filter: brightness(1.25);
 }
 
 .hero-top__art--flip {
@@ -551,6 +552,7 @@ body::before {
 .statement-product-image__img {
   object-fit: contain;
   object-position: center;
+  filter: contrast(1.1);
 }
 
 .statement-lower {
@@ -609,7 +611,7 @@ body::before {
 .line-panel {
   flex: 1;
   overflow: hidden;
-  background: var(--surface);
+  background: #000;
   border: 3px solid var(--border);
   box-sizing: border-box;
   --line-accent: var(--border-hover);
@@ -649,7 +651,7 @@ body::before {
 @media (hover: hover) and (pointer: fine) {
   .line-panel:hover:not(.line-panel--open) {
     border-color: var(--line-accent);
-    background: color-mix(in srgb, var(--line-glow) 8%, var(--surface));
+    background: color-mix(in srgb, var(--line-glow) 4%, #000);
     box-shadow: inset 0 3px 0 0 var(--line-accent);
   }
 
@@ -667,7 +669,7 @@ body::before {
 .line-panel--open {
   flex: 5;
   position: relative;
-  background: #141414;
+  background: #000;
   border: 3px solid var(--line-accent);
   box-shadow:
     inset 0 3px 0 0 var(--line-accent),
@@ -741,12 +743,12 @@ body::before {
 .line-panel-btn--line {
   border-color: var(--line-accent);
   color: var(--line-accent);
-  background: color-mix(in srgb, var(--line-accent) 10%, #141414);
+  background: color-mix(in srgb, var(--line-accent) 10%, #000);
 }
 
 .line-panel-btn--all {
   border: 3px solid var(--border);
-  background: var(--surface);
+  background: #000;
   color: var(--muted);
 }
 
@@ -910,6 +912,12 @@ body::before {
     max-height: none;
     flex: 1;
     overflow-y: auto;
+  }
+
+  .line-panel-btn {
+    padding: 0.4375rem 0.625rem;
+    font-size: 9px;
+    letter-spacing: 0.18em;
   }
 }
 

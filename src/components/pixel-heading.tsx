@@ -8,9 +8,9 @@ const TEXT = "100% CIGAR LEAF";
 const CHARS = TEXT.split("");
 const ARIA_LABEL = "100% Cigar Leaf";
 
-const CHANGE_MIN_MS = 400;
-const CHANGE_MAX_MS = 900;
-const STAGGER_MAX_MS = 1200;
+const CHANGE_MIN_MS = 200;
+const CHANGE_MAX_MS = 450;
+const STAGGER_MAX_MS = 600;
 const FREEZE_CHANCE = 0.25;
 const FREEZE_MIN_MS = 2000;
 const FREEZE_MAX_MS = 5000;
