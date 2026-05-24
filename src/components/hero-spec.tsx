@@ -13,7 +13,7 @@ const SPEC_ROWS: SpecRow[] = [
   { label: "Type", value: "Ligero / Seco" },
   { label: "Sort", value: "Criollo 98 / Piloto Cubano" },
   { label: "Leaf Origin", value: "Dominican Republic" },
-  { label: "Origin", value: "Single Origin" },
+  { label: "Body", value: "Full-Bodied" },
   { label: "Strength", value: "7/10", accent: true },
   { label: "Lines", value: "05" },
 ];

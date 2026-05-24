@@ -38,7 +38,7 @@ const lines = [
 
 export default function ProductLines() {
   const [openIndex, setOpenIndex] = useState<string | null>(null);
-  const { setActiveLineId } = useCursorTheme();
+  const { pinLineId } = useCursorTheme();
   const panelRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function ProductLines() {
     setOpenIndex((current) => {
       const next = current === index ? null : index;
       if (next) {
-        setActiveLineId(lineId);
+        pinLineId(lineId);
       }
       return next;
     });
@@ -94,7 +94,7 @@ export default function ProductLines() {
             aria-expanded={isOpen}
             onPointerEnter={(event) => {
               if (event.pointerType === "mouse") {
-                setActiveLineId(line.id);
+                pinLineId(line.id);
               }
             }}
             onClick={() => togglePanel(line.index, line.id)}

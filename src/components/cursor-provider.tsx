@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useMemo,
   useState,
@@ -12,21 +13,31 @@ import { getCursorTheme, type CursorTheme } from "@/lib/cursor-themes";
 type CursorContextValue = {
   theme: CursorTheme;
   activeLineId: string | null;
+  pinnedLineId: string | null;
   setActiveLineId: (id: string | null) => void;
+  pinLineId: (id: string) => void;
 };
 
 const CursorContext = createContext<CursorContextValue | null>(null);
 
 export function CursorProvider({ children }: { children: ReactNode }) {
   const [activeLineId, setActiveLineId] = useState<string | null>(null);
+  const [pinnedLineId, setPinnedLineId] = useState<string | null>(null);
+
+  const pinLineId = useCallback((id: string) => {
+    setPinnedLineId(id);
+    setActiveLineId(id);
+  }, []);
 
   const value = useMemo(
     () => ({
       theme: getCursorTheme(activeLineId ?? "default"),
       activeLineId,
+      pinnedLineId,
       setActiveLineId,
+      pinLineId,
     }),
-    [activeLineId],
+    [activeLineId, pinnedLineId, pinLineId],
   );
 
   return (

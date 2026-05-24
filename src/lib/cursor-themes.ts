@@ -49,6 +49,13 @@ export const CURSOR_THEMES: Record<string, CursorTheme> = {
     hot: "#fffef8",
     tick: "#e8c4bc",
   },
+  fire: {
+    id: "fire",
+    particles: ["#fff4e0", "#ffcc44", "#ff8800", "#cc3300", "#a06830"],
+    core: "#ff8800",
+    hot: "#fff4e0",
+    tick: "#cc3300",
+  },
 };
 
 export function getCursorTheme(id: string): CursorTheme {

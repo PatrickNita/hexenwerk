@@ -1,10 +1,10 @@
-﻿import HeroBrand from "@/components/hero-brand";
+import HeroBrand from "@/components/hero-brand";
 import HeroSideArt from "@/components/hero-side-art";
 import HeroSpec from "@/components/hero-spec";
 import ProductLines from "@/components/product-lines";
 import ScrollAwareHeader from "@/components/scroll-aware-header";
 import SectionCrumb from "@/components/section-crumb";
-import Image from "next/image";
+import StatementArtboard from "@/components/statement-artboard";
 
 export default function Home() {
   const year = new Date().getFullYear();
@@ -33,39 +33,13 @@ export default function Home() {
         </section>
 
         <section id="s2" className="snap-section snap-section--statement">
-          <div className="statement-crumb">
+          <div className="statement-crumb-band">
             <SectionCrumb label="The Product" meta="02" />
           </div>
-          <div className="statement-upper">
-            <div className="statement-upper__content">
-              <h2 className="statement-headline">
-                HEXENWERK - 100% CIGAR LEAF HOOKAH TOBACCO
-              </h2>
-              <p className="statement-body">
-                Single-origin cigar leaf. No glycerin. No molasses. Built for
-                heat, not compromise.
-              </p>
-              <div className="statement-product-image">
-                <Image
-                  src="/assets/section02/section02_product.webp"
-                  alt=""
-                  fill
-                  unoptimized
-                  className="statement-product-image__img"
-                  sizes="(max-width: 768px) 100vw, 48rem"
-                />
-              </div>
+          <div className="statement-bg-wrap">
+            <div className="statement-bg-scaler">
+              <StatementArtboard />
             </div>
-          </div>
-          <div className="statement-lower">
-            <Image
-              src="/assets/section02/section02.webp"
-              alt=""
-              fill
-              unoptimized
-              className="statement-image"
-              sizes="100vw"
-            />
           </div>
         </section>
 
