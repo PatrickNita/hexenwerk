@@ -218,7 +218,7 @@ body::before {
   position: relative;
   width: 100%;
   height: 100%;
-  filter: brightness(1.25);
+  filter: brightness(1.3) contrast(2);
 }
 
 .hero-top__art--flip {
