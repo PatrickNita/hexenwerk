@@ -10,7 +10,13 @@ export const SECTION02_LOG_CLIP_FRAME_SRCS = [1, 2, 3, 4, 5, 6, 7].map(
     `/assets/section02/log-clip${n}.png?v=${SECTION02_LOG_CLIP_FRAMES_VERSION}`,
 );
 
-/** Glow shape masks in globals.css must use SECTION02_LOG_CLIP_FRAME_SRCS; bump versions together. */
+export const SECTION02_LOG_GLOW_MASK_VERSION = 1;
+export const SECTION02_LOG_GLOW_MASK_SRCS = [1, 2, 3, 4, 5, 6, 7].map(
+  (n) =>
+    `/assets/section02/log-glow${n}.png?v=${SECTION02_LOG_GLOW_MASK_VERSION}`,
+);
+
+/** @deprecated Dual-mask clip URLs; glow CSS now uses SECTION02_LOG_GLOW_MASK_SRCS. */
 export const SECTION02_LOG_GLOW_SHAPE_MASKS = SECTION02_LOG_CLIP_FRAME_SRCS;
 
 export const SECTION02_LOG_MASK_VERSION = 4;
@@ -32,7 +38,14 @@ export const SECTION02_CANDLE_CLIP_FRAME_SRCS =
       `/assets/section02/candles-clip${n}.png?v=${SECTION02_CANDLE_CLIP_FRAMES_VERSION}`,
   );
 
-/** Glow shape masks in globals.css must use SECTION02_CANDLE_CLIP_FRAME_SRCS; bump versions together. */
+export const SECTION02_CANDLE_GLOW_MASK_VERSION = 1;
+export const SECTION02_CANDLE_GLOW_MASK_SRCS =
+  SECTION02_CANDLE_FRAME_NUMBERS.map(
+    (n) =>
+      `/assets/section02/candles-glow${n}.png?v=${SECTION02_CANDLE_GLOW_MASK_VERSION}`,
+  );
+
+/** @deprecated Dual-mask clip URLs; glow CSS now uses SECTION02_CANDLE_GLOW_MASK_SRCS. */
 export const SECTION02_CANDLE_GLOW_SHAPE_MASKS =
   SECTION02_CANDLE_CLIP_FRAME_SRCS;
 

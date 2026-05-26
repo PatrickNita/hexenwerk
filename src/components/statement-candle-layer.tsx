@@ -23,7 +23,7 @@ export default function StatementCandleLayer() {
           }}
           src={SECTION02_CANDLE_FRAME_SRCS[0]}
           alt=""
-          className="statement-candle-frame statement-candle-frame--active"
+          className="statement-log-frame statement-log-frame--active"
         />
       ) : null}
       {spritesReady ? (
