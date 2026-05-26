@@ -83,6 +83,10 @@ body.custom-cursor-active * {
     transform: translate(-50%, 0);
   }
 
+  .site-preloader__logo {
+    animation: none;
+  }
+
   body.custom-cursor-active,
   body.custom-cursor-active * {
     cursor: auto !important;
@@ -147,11 +151,24 @@ body::before {
   pointer-events: none;
 }
 
+@keyframes site-preloader-logo-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
 .site-preloader__logo {
   height: 3.5rem;
   width: auto;
   max-width: 15rem;
   object-fit: contain;
+  animation: site-preloader-logo-pulse 2s ease-in-out infinite;
+  will-change: transform;
 }
 
 @media (min-width: 768px) {

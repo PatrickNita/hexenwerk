@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 
-const POST_LOAD_HOLD_MS = 500;
+const POST_LOAD_HOLD_MS = 2000;
 const FADE_MS = 200;
 
 type SitePreloadContextValue = {
