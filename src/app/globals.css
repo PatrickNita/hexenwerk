@@ -695,9 +695,8 @@ body::before {
 }
 
 .statement-artboard {
-  --statement-scale: min(1, 100cqw / 1672, 100cqh / 941);
-  width: calc(1672px * var(--statement-scale));
-  height: calc(941px * var(--statement-scale));
+  width: min(1672px, 100cqw, calc(100cqh * 1672 / 941));
+  height: min(941px, 100cqh, calc(100cqw * 941 / 1672));
   position: relative;
   flex-shrink: 0;
   max-height: 100%;
