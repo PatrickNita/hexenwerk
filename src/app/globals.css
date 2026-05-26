@@ -79,7 +79,7 @@ body.custom-cursor-active * {
 
   .statement-artboard__product {
     animation: none;
-    top: 10.5%;
+    top: 14%;
     transform: translate(-50%, 0);
   }
 
@@ -943,7 +943,7 @@ body::before {
   --product-shadow-color: #f27507;
   position: absolute;
   left: 50%;
-  top: 10.5%;
+  top: 14%;
   z-index: 6;
   width: min(22%, 280px);
   height: auto;
@@ -966,7 +966,7 @@ body::before {
   }
 
   .statement-artboard__product {
-    width: min(42vw, 180px);
+    width: min(18.7%, 238px);
   }
 }
 
