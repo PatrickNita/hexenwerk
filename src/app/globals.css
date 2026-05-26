@@ -767,8 +767,7 @@ body::before {
 }
 
 .statement-log-frame--active {
-  /* TEST: hide log sprite PNG; candle glow frames stay visible for mask alignment checks */
-  visibility: hidden;
+  visibility: visible;
 }
 
 .statement-artboard__layer--candles {
