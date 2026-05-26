@@ -1,4 +1,4 @@
-import HeroBrand from "@/components/hero-brand";
+﻿import HeroBrand from "@/components/hero-brand";
 import HeroSideArt from "@/components/hero-side-art";
 import HeroSpec from "@/components/hero-spec";
 import ProductLines from "@/components/product-lines";
@@ -36,8 +36,8 @@ export default function Home() {
           <div className="statement-crumb-band">
             <SectionCrumb label="The Product" meta="02" />
           </div>
-          <div className="statement-bg-wrap">
-            <div className="statement-bg-scaler">
+          <div className="statement-stage">
+            <div className="statement-bg-wrap">
               <StatementArtboard />
             </div>
           </div>

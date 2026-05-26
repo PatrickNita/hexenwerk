@@ -1,20 +1,42 @@
-export const SECTION02_LOG_MASK_VERSION = 3;
+export const SECTION02_LOG_FRAMES_VERSION = 1;
+export const SECTION02_LOG_FRAME_MS = 150;
+export const SECTION02_LOG_FRAME_SRCS = [1, 2, 3, 4, 5, 6, 7].map(
+  (n) => `/assets/section02/log${n}.png?v=${SECTION02_LOG_FRAMES_VERSION}`,
+);
 
+export const SECTION02_LOG_CLIP_FRAMES_VERSION = 1;
+export const SECTION02_LOG_CLIP_FRAME_SRCS = [1, 2, 3, 4, 5, 6, 7].map(
+  (n) =>
+    `/assets/section02/log-clip${n}.png?v=${SECTION02_LOG_CLIP_FRAMES_VERSION}`,
+);
+
+/** Glow shape masks in globals.css must use SECTION02_LOG_CLIP_FRAME_SRCS; bump versions together. */
+export const SECTION02_LOG_GLOW_SHAPE_MASKS = SECTION02_LOG_CLIP_FRAME_SRCS;
+
+export const SECTION02_LOG_MASK_VERSION = 4;
 export const SECTION02_LOG_MASK_URL = `/assets/section02/log-mask.png?v=${SECTION02_LOG_MASK_VERSION}`;
 
-export const SECTION02_CANDLE_SRCS = [
-  "/assets/section02/candle1.png",
-  "/assets/section02/candle2.png",
-  "/assets/section02/candle3.png",
-  "/assets/section02/candle4.png",
-  "/assets/section02/candle5.png",
-  "/assets/section02/candle6.png",
-  "/assets/section02/candle7.png",
-  "/assets/section02/candle8.png",
-  "/assets/section02/candle9.png",
-  "/assets/section02/candle10.png",
-  "/assets/section02/candle11.png",
-  "/assets/section02/candle12.png",
-  "/assets/section02/candle13.png",
-  "/assets/section02/candle14.png",
-] as const;
+export const SECTION02_CANDLE_FRAME_NUMBERS = [2, 3, 4] as const;
+
+export const SECTION02_CANDLE_FRAMES_VERSION = 1;
+export const SECTION02_CANDLE_FRAME_MS = SECTION02_LOG_FRAME_MS;
+export const SECTION02_CANDLE_FRAME_SRCS = SECTION02_CANDLE_FRAME_NUMBERS.map(
+  (n) =>
+    `/assets/section02/candles${n}.png?v=${SECTION02_CANDLE_FRAMES_VERSION}`,
+);
+
+export const SECTION02_CANDLE_CLIP_FRAMES_VERSION = 2;
+export const SECTION02_CANDLE_CLIP_FRAME_SRCS =
+  SECTION02_CANDLE_FRAME_NUMBERS.map(
+    (n) =>
+      `/assets/section02/candles-clip${n}.png?v=${SECTION02_CANDLE_CLIP_FRAMES_VERSION}`,
+  );
+
+/** Glow shape masks in globals.css must use SECTION02_CANDLE_CLIP_FRAME_SRCS; bump versions together. */
+export const SECTION02_CANDLE_GLOW_SHAPE_MASKS =
+  SECTION02_CANDLE_CLIP_FRAME_SRCS;
+
+export const SECTION02_CANDLE_MASK_VERSION = 1;
+export const SECTION02_CANDLE_MASK_URL = `/assets/section02/candles-mask.png?v=${SECTION02_CANDLE_MASK_VERSION}`;
+
+export const SECTION02_PRODUCT_SRC = "/assets/section02/section02_product.png";

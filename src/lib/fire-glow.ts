@@ -1,3 +1,5 @@
+import { LINE_COLOR_PAIRS } from "@/lib/line-colors";
+
 export type GlowPhase = "darkOrange" | "darkBrown";
 
 export type FireGlowState = {
@@ -37,46 +39,6 @@ const GLOW_DARK_BROWN = {
   cool: "#3d2512",
 } as const;
 
-/** Monochromatic vivid/deep triads per product line — same structure as fire orange/brown. */
-const LINE_GLOW_PALETTES: Record<LineGlowId, [GlowStops, GlowStops]> = {
-  beverage: [
-    { hot: "#e8f4ff", mid: "#7ec8e3", cool: "#4a90a4" },
-    { hot: "#7ec8e3", mid: "#4a90a4", cool: "#1a3540" },
-  ],
-  botanical: [
-    { hot: "#5a934f", mid: "#4a7c42", cool: "#2d5a27" },
-    { hot: "#3a6532", mid: "#2d5a27", cool: "#141f0e" },
-  ],
-  essence: [
-    { hot: "#9d7fd4", mid: "#6b4c9a", cool: "#1a1a22" },
-    { hot: "#6b4c9a", mid: "#3d2d5c", cool: "#0a0a10" },
-  ],
-  gastronomy: [
-    { hot: "#8b4a62", mid: "#722f47", cool: "#4a1528" },
-    { hot: "#6b3a4a", mid: "#4a1528", cool: "#240a14" },
-  ],
-  perfumery: [
-    { hot: "#fffef8", mid: "#f5d5d0", cool: "#e8c4bc" },
-    { hot: "#e8c4bc", mid: "#c9a89e", cool: "#8a7068" },
-  ],
-};
-
-/** Fireplace origin on the section02 artboard. */
-const GLOW_ORIGIN_X = "50%";
-const GLOW_ORIGIN_Y = "82%";
-
-function glowRadialBackground(hot: string, mid: string, cool: string) {
-  return `radial-gradient(circle farthest-side at ${GLOW_ORIGIN_X} ${GLOW_ORIGIN_Y}, ${hot} 0%, ${mid} 28%, ${cool} 58%, ${cool} 100%)`;
-}
-
-export function defaultLightningBackground() {
-  return glowRadialBackground(
-    GLOW_DARK_ORANGE.hot,
-    GLOW_DARK_ORANGE.mid,
-    GLOW_DARK_ORANGE.cool,
-  );
-}
-
 const PHASE_ORDER: GlowPhase[] = ["darkOrange", "darkBrown"];
 
 /** 1s per color → 2s full cycle. */
@@ -86,6 +48,30 @@ const CYCLE_MS = PHASE_MS * PHASE_ORDER.length;
 const GLOW_BRIGHTNESS = 1.35;
 const GLOW_CONTRAST = 1.28;
 const GLOW_STRENGTH = 1;
+
+function clamp01(value: number) {
+  return Math.max(0, Math.min(1, value));
+}
+
+/** Matches CSS `brightness(n) contrast(c)` applied to glow layers. */
+export function applyGlowDisplayColor(hex: string, brightness: number): string {
+  const { r, g, b } = parseHex(hex);
+  let rn = clamp01((r / 255) * brightness);
+  let gn = clamp01((g / 255) * brightness);
+  let bn = clamp01((b / 255) * brightness);
+  rn = clamp01((rn - 0.5) * GLOW_CONTRAST + 0.5);
+  gn = clamp01((gn - 0.5) * GLOW_CONTRAST + 0.5);
+  bn = clamp01((bn - 0.5) * GLOW_CONTRAST + 0.5);
+
+  return rgbToHex(rn * 255, gn * 255, bn * 255);
+}
+
+export function getGlowDisplayColor(now: number, lineId?: string | null): string {
+  return applyGlowDisplayColor(
+    getGlowSpriteColor(now, lineId),
+    glowBrightness(lineId),
+  );
+}
 
 const IDLE_GLOW: FireGlowState = {
   phase: "darkOrange",
@@ -127,6 +113,45 @@ export function mixHex(from: string, to: string, amount: number) {
     a.b + (b.b - a.b) * t,
   );
 }
+
+function lineGlowFromTwoColors(vivid: string, deep: string): [GlowStops, GlowStops] {
+  return [
+    {
+      hot: vivid,
+      mid: mixHex(vivid, deep, 0.45),
+      cool: mixHex(deep, "#000000", 0.35),
+    },
+    {
+      hot: deep,
+      mid: mixHex(deep, vivid, 0.45),
+      cool: mixHex(deep, "#000000", 0.5),
+    },
+  ];
+}
+
+/** Two-color vivid/deep triads per product line — same structure as fire orange/brown. */
+const LINE_GLOW_PALETTES: Record<LineGlowId, [GlowStops, GlowStops]> = {
+  beverage: lineGlowFromTwoColors(
+    LINE_COLOR_PAIRS.beverage.vivid,
+    LINE_COLOR_PAIRS.beverage.deep,
+  ),
+  botanical: lineGlowFromTwoColors(
+    LINE_COLOR_PAIRS.botanical.vivid,
+    LINE_COLOR_PAIRS.botanical.deep,
+  ),
+  essence: lineGlowFromTwoColors(
+    LINE_COLOR_PAIRS.essence.vivid,
+    LINE_COLOR_PAIRS.essence.deep,
+  ),
+  gastronomy: lineGlowFromTwoColors(
+    LINE_COLOR_PAIRS.gastronomy.vivid,
+    LINE_COLOR_PAIRS.gastronomy.deep,
+  ),
+  perfumery: lineGlowFromTwoColors(
+    LINE_COLOR_PAIRS.perfumery.vivid,
+    LINE_COLOR_PAIRS.perfumery.deep,
+  ),
+};
 
 function getPhasePalettes(lineId?: string | null): [GlowStops, GlowStops] {
   if (isProductLineGlowId(lineId)) {
@@ -189,39 +214,56 @@ export function computeFireGlowCycle(
   };
 }
 
-export function getGlowEmberColor(now: number, lineId?: string | null): string {
-  const glow = computeFireGlowCycle(now, lineId);
-  const roll = Math.random();
+export function getGlowSpriteColor(now: number, lineId?: string | null): string {
+  if (isProductLineGlowId(lineId)) {
+    const { vivid, deep } = LINE_COLOR_PAIRS[lineId];
+    const { phase, blend, nextPhase } = pickCyclePhase(now);
+    const from = phase === "darkBrown" ? deep : vivid;
+    const to = nextPhase === "darkBrown" ? deep : vivid;
+    const t = blend * blend * (3 - 2 * blend);
 
-  if (roll < 0.35) {
-    return glow.hot;
+    return mixHex(from, to, t);
   }
 
-  if (roll < 0.6) {
-    return mixHex(glow.hot, glow.mid, 0.4 + Math.random() * 0.35);
-  }
-
-  if (roll < 0.82) {
-    return glow.mid;
-  }
-
-  return mixHex(glow.mid, glow.cool, 0.3 + Math.random() * 0.4);
+  return computeFireGlowCycle(now, lineId).hot;
 }
 
-export function applyFireGlowToElement(
+export function getGlowEmberColor(now: number, lineId?: string | null): string {
+  return getGlowSpriteColor(now, lineId);
+}
+
+export function applyFireGlowVars(
   element: HTMLElement | null | undefined,
   glow: FireGlowState,
+  fillColor: string,
 ) {
   if (!element) {
     return;
   }
 
-  element.style.setProperty("--statement-lightning-hot", glow.hot);
-  element.style.setProperty("--statement-lightning-mid", glow.mid);
-  element.style.setProperty("--statement-lightning-cool", glow.cool);
-  element.style.backgroundImage = glowRadialBackground(glow.hot, glow.mid, glow.cool);
+  const displayColor = applyGlowDisplayColor(fillColor, glow.brightness);
+  element.style.setProperty("--statement-lightning-color", displayColor);
+  element.style.setProperty(
+    "--statement-lightning-strength",
+    glow.strength.toFixed(3),
+  );
+}
+
+export function applyFireGlowToElement(
+  element: HTMLElement | null | undefined,
+  glow: FireGlowState,
+  fillColor: string,
+) {
+  if (!element) {
+    return;
+  }
+
+  const displayColor = applyGlowDisplayColor(fillColor, glow.brightness);
+  applyFireGlowVars(element, glow, fillColor);
+  element.style.backgroundImage = "none";
+  element.style.backgroundColor = displayColor;
   element.style.opacity = glow.strength.toFixed(3);
-  element.style.filter = `brightness(${glow.brightness.toFixed(3)}) contrast(${GLOW_CONTRAST})`;
+  element.style.filter = "none";
 }
 
 export function defaultFireGlow(): FireGlowState {
