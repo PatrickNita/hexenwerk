@@ -38,9 +38,7 @@ export default function Home() {
           </div>
           <div className="statement-stage">
             <div className="statement-bg-wrap">
-              <div className="statement-bg-scaler">
-                <StatementArtboard />
-              </div>
+              <StatementArtboard />
             </div>
           </div>
         </section>
