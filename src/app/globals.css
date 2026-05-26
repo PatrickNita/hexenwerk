@@ -695,11 +695,11 @@ body::before {
 }
 
 .statement-artboard {
-  aspect-ratio: 1672 / 941;
+  --statement-scale: min(1, 100cqw / 1672, 100cqh / 941);
+  width: calc(1672px * var(--statement-scale));
+  height: calc(941px * var(--statement-scale));
   position: relative;
   flex-shrink: 0;
-  height: min(941px, 100cqh);
-  width: auto;
   max-height: 100%;
 }
 
@@ -710,7 +710,7 @@ body::before {
   height: 100%;
   pointer-events: none;
   object-fit: fill;
-  object-position: center bottom;
+  object-position: center;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
 }
@@ -739,8 +739,8 @@ body::before {
   mask-repeat: no-repeat;
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
-  -webkit-mask-position: center bottom;
-  mask-position: center bottom;
+  -webkit-mask-position: center;
+  mask-position: center;
   -webkit-mask-mode: luminance;
   mask-mode: luminance;
 }
@@ -750,7 +750,6 @@ body::before {
   inset: 0;
   z-index: 5;
   isolation: isolate;
-  contain: paint;
   pointer-events: none;
 }
 
@@ -760,15 +759,35 @@ body::before {
   width: 100%;
   height: 100%;
   object-fit: fill;
-  object-position: center bottom;
+  object-position: center;
   visibility: hidden;
   pointer-events: none;
   image-rendering: -webkit-optimize-contrast;
 }
 
 .statement-log-frame--active {
-  /* TEST: hide log sprite PNG; candle glow frames stay visible for mask alignment checks */
+  visibility: visible;
+}
+
+/* TEST: hide log sprite only — keep for iPhone glow checks */
+.statement-artboard__layer--log .statement-log-frame--active {
   visibility: hidden;
+}
+
+.statement-candle-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
+  visibility: hidden;
+  pointer-events: none;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.statement-candle-frame--active {
+  visibility: visible;
 }
 
 .statement-artboard__layer--candles {
@@ -776,13 +795,14 @@ body::before {
   inset: 0;
   z-index: 5;
   isolation: isolate;
-  contain: paint;
   pointer-events: none;
 }
 
 .statement-candle-glow-frame {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   mix-blend-mode: darken;
   visibility: hidden;
   pointer-events: none;
@@ -791,12 +811,14 @@ body::before {
   opacity: var(--statement-lightning-strength);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
+  -webkit-mask-origin: border-box;
+  mask-origin: border-box;
   -webkit-mask-repeat: no-repeat, no-repeat;
   mask-repeat: no-repeat, no-repeat;
   -webkit-mask-size: 100% 100%, 100% 100%;
   mask-size: 100% 100%, 100% 100%;
-  -webkit-mask-position: center bottom, center bottom;
-  mask-position: center bottom, center bottom;
+  -webkit-mask-position: center, center;
+  mask-position: center, center;
   -webkit-mask-mode: alpha, luminance;
   mask-mode: alpha, luminance;
 }
@@ -829,6 +851,8 @@ body::before {
 .statement-log-glow-frame {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   mix-blend-mode: darken;
   visibility: hidden;
   pointer-events: none;
@@ -837,12 +861,14 @@ body::before {
   opacity: var(--statement-lightning-strength);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
+  -webkit-mask-origin: border-box;
+  mask-origin: border-box;
   -webkit-mask-repeat: no-repeat, no-repeat;
   mask-repeat: no-repeat, no-repeat;
   -webkit-mask-size: 100% 100%, 100% 100%;
   mask-size: 100% 100%, 100% 100%;
-  -webkit-mask-position: center bottom, center bottom;
-  mask-position: center bottom, center bottom;
+  -webkit-mask-position: center, center;
+  mask-position: center, center;
   -webkit-mask-mode: alpha, luminance;
   mask-mode: alpha, luminance;
 }
@@ -932,11 +958,6 @@ body::before {
 }
 
 @media (max-width: 767px) {
-  .statement-artboard__layer--log,
-  .statement-artboard__layer--candles {
-    contain: none;
-  }
-
   .statement-artboard__product {
     width: min(42vw, 180px);
   }
