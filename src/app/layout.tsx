@@ -3,6 +3,7 @@ import { GeistPixelGrid } from "geist/font/pixel";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import CursorShell from "@/components/cursor-shell";
+import SitePreloadLinks from "@/components/site-preload-links";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -26,6 +27,9 @@ export default function RootLayout({
       lang="en"
       className={`${GeistSans.variable} ${GeistMono.variable} ${GeistPixelGrid.variable} h-full`}
     >
+      <head>
+        <SitePreloadLinks />
+      </head>
       <body className="min-h-full">
         <CursorShell>{children}</CursorShell>
       </body>

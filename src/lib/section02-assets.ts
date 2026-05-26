@@ -53,3 +53,19 @@ export const SECTION02_CANDLE_MASK_VERSION = 1;
 export const SECTION02_CANDLE_MASK_URL = `/assets/section02/candles-mask.png?v=${SECTION02_CANDLE_MASK_VERSION}`;
 
 export const SECTION02_PRODUCT_SRC = "/assets/section02/section02_product.png";
+
+export const SECTION02_BG_SRC = "/assets/section02/section02.png";
+export const SECTION02_LIGHTNING_SRC =
+  "/assets/section02/lightning-witches.png";
+
+export const SECTION02_PRELOAD_SRCS = [
+  SECTION02_BG_SRC,
+  SECTION02_PRODUCT_SRC,
+  SECTION02_LIGHTNING_SRC,
+  ...SECTION02_LOG_FRAME_SRCS,
+  ...SECTION02_CANDLE_FRAME_SRCS,
+  ...SECTION02_LOG_GLOW_MASK_SRCS,
+  ...SECTION02_CANDLE_GLOW_MASK_SRCS,
+] as const;
+
+export { preloadImages } from "@/lib/preload-images";

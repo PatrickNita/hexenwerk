@@ -12,6 +12,7 @@ import {
   SECTION02_LOG_FRAME_MS,
   SECTION02_LOG_FRAME_SRCS,
 } from "@/lib/section02-assets";
+import { useSitePreload } from "@/components/site-preloader";
 import {
   createContext,
   useCallback,
@@ -90,9 +91,11 @@ export function StatementArtboardRuntimeProvider({
   children: ReactNode;
 }) {
   const { activeLineId } = useCursorTheme();
+  const { ready: siteReady } = useSitePreload();
   const activeLineIdRef = useRef(activeLineId);
   const [isActive, setIsActive] = useState(false);
   const [spritesReady, setSpritesReady] = useState(false);
+  const spritesReadyRef = useRef(false);
 
   const productRef = useRef<HTMLImageElement | null>(null);
   const fireGlowRef = useRef<HTMLDivElement | null>(null);
@@ -114,6 +117,9 @@ export function StatementArtboardRuntimeProvider({
 
   const registerFireGlow = useCallback((el: HTMLDivElement | null) => {
     fireGlowRef.current = el;
+    if (el && spritesReadyRef.current) {
+      el.classList.add("statement-fire-glow--ready");
+    }
   }, []);
 
   const registerLogSprite = useCallback(
@@ -166,26 +172,14 @@ export function StatementArtboardRuntimeProvider({
   }, [activeLineId]);
 
   useEffect(() => {
-    let loaded = 0;
-    const sources = [
-      ...SECTION02_LOG_FRAME_SRCS,
-      ...SECTION02_CANDLE_FRAME_SRCS,
-    ];
-
-    const markLoaded = () => {
-      loaded += 1;
-      if (loaded >= sources.length) {
-        setSpritesReady(true);
-      }
-    };
-
-    for (const src of sources) {
-      const img = new window.Image();
-      img.onload = markLoaded;
-      img.onerror = markLoaded;
-      img.src = src;
+    if (!siteReady) {
+      return;
     }
-  }, []);
+
+    setSpritesReady(true);
+    spritesReadyRef.current = true;
+    fireGlowRef.current?.classList.add("statement-fire-glow--ready");
+  }, [siteReady]);
 
   useEffect(() => {
     const section = document.getElementById("s2");

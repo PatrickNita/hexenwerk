@@ -8,7 +8,10 @@ import {
 } from "@/components/statement-artboard-runtime";
 import StatementLightningLayer from "@/components/statement-lightning-witches";
 import StatementLogLayer from "@/components/statement-log-layer";
-import { SECTION02_PRODUCT_SRC } from "@/lib/section02-assets";
+import {
+  SECTION02_BG_SRC,
+  SECTION02_PRODUCT_SRC,
+} from "@/lib/section02-assets";
 import Image from "next/image";
 
 function StatementArtboardContent() {
@@ -18,7 +21,7 @@ function StatementArtboardContent() {
   return (
     <div className="statement-artboard">
       <Image
-        src="/assets/section02/section02.png"
+        src={SECTION02_BG_SRC}
         alt=""
         fill
         unoptimized
@@ -38,6 +41,7 @@ function StatementArtboardContent() {
         width={480}
         height={480}
         unoptimized
+        priority
         className="statement-artboard__product"
         sizes="(max-width: 767px) 42vw, 22vw"
       />

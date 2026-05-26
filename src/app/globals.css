@@ -130,6 +130,37 @@ body::before {
   padding: 0.375rem 0.75rem;
 }
 
+.site-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background: #000;
+  opacity: 1;
+  transition: opacity 200ms steps(2, end);
+  pointer-events: all;
+}
+
+.site-preloader--done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-preloader__logo {
+  height: 3.5rem;
+  width: auto;
+  max-width: 15rem;
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .site-preloader__logo {
+    height: 4.25rem;
+    max-width: 18rem;
+  }
+}
+
 .site-header-logo {
   height: 2rem;
   width: auto;
@@ -725,6 +756,11 @@ body::before {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  visibility: hidden;
+}
+
+.statement-fire-glow--ready {
+  visibility: visible;
 }
 
 .statement-lightning {
