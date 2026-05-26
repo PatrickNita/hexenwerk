@@ -945,7 +945,7 @@ body::before {
   left: 50%;
   top: 14%;
   z-index: 6;
-  width: min(22%, 280px);
+  width: min(19.8%, 252px);
   height: auto;
   transform: translate(-50%, 0);
   object-fit: contain;
@@ -967,6 +967,7 @@ body::before {
 
   .statement-artboard__product {
     width: min(18.7%, 238px);
+    top: 18%;
   }
 }
 

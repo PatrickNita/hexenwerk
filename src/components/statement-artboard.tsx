@@ -43,7 +43,7 @@ function StatementArtboardContent() {
         unoptimized
         priority
         className="statement-artboard__product"
-        sizes="(max-width: 767px) 18.7vw, 22vw"
+        sizes="(max-width: 767px) 18.7vw, 19.8vw"
       />
       <div
         className="statement-fire-hit"
