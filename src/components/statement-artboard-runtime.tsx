@@ -107,14 +107,6 @@ export function StatementArtboardRuntimeProvider({
   const glowIntervalRef = useRef<number | null>(null);
   const spriteIntervalRef = useRef<number | null>(null);
   const glowCacheRef = useRef<Record<string, AppliedGlow>>({});
-  const debugPerfRef = useRef({
-    glowTicks: 0,
-    glowWrites: 0,
-    shadowWrites: 0,
-    applyMsTotal: 0,
-    spriteTicks: 0,
-    lastSampleAt: 0,
-  });
 
   const registerProduct = useCallback((el: HTMLImageElement | null) => {
     productRef.current = el;
@@ -205,27 +197,6 @@ export function StatementArtboardRuntimeProvider({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // #region agent log
-        fetch("http://127.0.0.1:7524/ingest/5e4ed788-fddd-43ad-9fc8-34c88879a75a", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Debug-Session-Id": "4ae409",
-          },
-          body: JSON.stringify({
-            sessionId: "4ae409",
-            runId: "post-fix",
-            hypothesisId: "E",
-            location: "statement-artboard-runtime.tsx:observer",
-            message: "s2 intersection changed",
-            data: {
-              isIntersecting: entry.isIntersecting,
-              intersectionRatio: entry.intersectionRatio,
-            },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
         setIsActive(entry.isIntersecting);
       },
       { root, threshold: 0.08 },
@@ -240,22 +211,18 @@ export function StatementArtboardRuntimeProvider({
     const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const applyAll = (now: number) => {
-      const applyStart = performance.now();
       const lineId = activeLineIdRef.current;
       const glow = computeFireGlowCycle(now, lineId);
       const fillColor = getGlowSpriteColor(now, lineId);
       const cache = glowCacheRef.current;
 
-      const glowWrote = applyGlowIfChanged(
+      applyGlowIfChanged(
         fireGlowRef.current,
         "fireGlow",
         glow,
         fillColor,
         cache,
       );
-      if (glowWrote) {
-        debugPerfRef.current.glowWrites += 1;
-      }
 
       const product = productRef.current;
       if (product) {
@@ -267,53 +234,7 @@ export function StatementArtboardRuntimeProvider({
             brightness: "",
             strength: "",
           };
-          debugPerfRef.current.shadowWrites += 1;
         }
-      }
-
-      debugPerfRef.current.applyMsTotal += performance.now() - applyStart;
-      debugPerfRef.current.glowTicks += 1;
-
-      const perf = debugPerfRef.current;
-      if (perf.lastSampleAt === 0) {
-        perf.lastSampleAt = now;
-      } else if (now - perf.lastSampleAt >= 2000) {
-        const elapsedSec = (now - perf.lastSampleAt) / 1000;
-        // #region agent log
-        fetch("http://127.0.0.1:7524/ingest/5e4ed788-fddd-43ad-9fc8-34c88879a75a", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Debug-Session-Id": "4ae409",
-          },
-          body: JSON.stringify({
-            sessionId: "4ae409",
-            runId: "post-fix",
-            hypothesisId: "A",
-            location: "statement-artboard-runtime.tsx:glowInterval",
-            message: "glow update sample",
-            data: {
-              isActive,
-              glowTicksPerSec: (perf.glowTicks / elapsedSec).toFixed(1),
-              glowWritesPerSec: (perf.glowWrites / elapsedSec).toFixed(1),
-              shadowWritesPerSec: (perf.shadowWrites / elapsedSec).toFixed(1),
-              spriteTicksPerSec: (perf.spriteTicks / elapsedSec).toFixed(1),
-              avgApplyAllMs: perf.glowTicks
-                ? (perf.applyMsTotal / perf.glowTicks).toFixed(3)
-                : "0",
-              hasFireGlowRef: !!fireGlowRef.current,
-              hasProductRef: !!productRef.current,
-            },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
-        perf.glowTicks = 0;
-        perf.glowWrites = 0;
-        perf.shadowWrites = 0;
-        perf.spriteTicks = 0;
-        perf.applyMsTotal = 0;
-        perf.lastSampleAt = now;
       }
     };
 
@@ -362,7 +283,6 @@ export function StatementArtboardRuntimeProvider({
       candleFrameIndexRef.current =
         (candleFrameIndexRef.current + 1) % SECTION02_CANDLE_FRAME_SRCS.length;
       applySpriteFrames();
-      debugPerfRef.current.spriteTicks += 1;
     }, SECTION02_LOG_FRAME_MS);
 
     return () => {

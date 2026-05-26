@@ -938,6 +938,18 @@ body::before {
   z-index: 4;
 }
 
+.statement-fire-hit {
+  position: absolute;
+  left: 50%;
+  bottom: var(--statement-fire-hit-bottom, 18.6%);
+  width: var(--statement-fire-hit-width, 14%);
+  height: var(--statement-fire-hit-height, 18%);
+  z-index: 8;
+  pointer-events: auto;
+  background: transparent;
+  transform: translate(-50%, calc(-1 * var(--statement-fire-lift, -15px)));
+}
+
 .scroll-hint {
   position: absolute;
   right: 1rem;
