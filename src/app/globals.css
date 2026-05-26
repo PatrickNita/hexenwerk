@@ -681,6 +681,8 @@ body::before {
 }
 
 .statement-bg-wrap {
+  container-type: size;
+  container-name: statement-stage;
   position: relative;
   flex: 1;
   min-height: 0;
@@ -688,17 +690,16 @@ body::before {
   pointer-events: none;
   isolation: isolate;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
 }
 
 .statement-artboard {
-  --statement-artboard-w: 1672px;
-  --statement-artboard-h: 941px;
+  aspect-ratio: 1672 / 941;
   position: relative;
   flex-shrink: 0;
-  width: var(--statement-artboard-w);
-  height: var(--statement-artboard-h);
+  width: min(1672px, 100cqw, calc(100cqh * 1672 / 941));
+  height: auto;
 }
 
 .statement-artboard__layer {
