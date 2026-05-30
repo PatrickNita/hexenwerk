@@ -1069,20 +1069,6 @@ body.custom-cursor-active * {
     0 0 0 1px rgb(255 255 255 / 0.3);
 }
 
-.line-panel--open::after {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgb(255 255 255 / 0.02) 3px,
-    rgb(255 255 255 / 0.02) 4px
-  );
-}
-
 .line-panel--open .line-index-box {
   border-color: var(--line-accent);
   color: var(--foreground);
@@ -1353,6 +1339,14 @@ body.custom-cursor-active * {
     height: min(70cqw, 34cqh);
     min-width: 100%;
     min-height: 100%;
+  }
+
+  .line-panel--open[data-line="botanical"] .line-panel-box-player__frame {
+    min-width: 75%;
+  }
+
+  .line-panel--open[data-line="essence"] .line-panel-box-player__frame {
+    min-width: 90%;
   }
 
   .line-panel-btn {
