@@ -3,7 +3,7 @@
 import { useSitePreload } from "@/components/site-preloader";
 import { getProductLineBoxFrame } from "@/lib/product-line-box-cycle";
 import {
-  getSection03FrameImage,
+  getSection03FrameBlobUrl,
   isSection03FramesReady,
 } from "@/lib/section03-frame-cache";
 import { getSection03FrameSrc } from "@/lib/section03-assets";
@@ -13,6 +13,14 @@ type ProductLineBoxPlayerProps = {
   lineId: string;
   active: boolean;
 };
+
+function getPlaybackSrc(lineId: string, frame: number): string {
+  if (isSection03FramesReady()) {
+    return getSection03FrameBlobUrl(lineId, frame) ?? getSection03FrameSrc(lineId, frame);
+  }
+
+  return getSection03FrameSrc(lineId, frame);
+}
 
 export default function ProductLineBoxPlayer({
   lineId,
@@ -37,8 +45,7 @@ export default function ProductLineBoxPlayer({
 
     const frameA = frameARef.current;
     const frameB = frameBRef.current;
-    const firstFrame = getSection03FrameImage(lineId, 1);
-    const initialSrc = firstFrame?.src ?? getSection03FrameSrc(lineId, 1);
+    const initialSrc = getPlaybackSrc(lineId, 1);
 
     if (frameA) {
       frameA.src = initialSrc;
@@ -64,8 +71,8 @@ export default function ProductLineBoxPlayer({
     cycleStartRef.current = performance.now();
 
     const swapToFrame = async (frame: number) => {
-      const cached = getSection03FrameImage(lineId, frame);
-      if (!cached) {
+      const blobUrl = getSection03FrameBlobUrl(lineId, frame);
+      if (!blobUrl) {
         return;
       }
 
@@ -76,7 +83,7 @@ export default function ProductLineBoxPlayer({
         return;
       }
 
-      backEl.src = cached.src;
+      backEl.src = blobUrl;
 
       try {
         await backEl.decode();

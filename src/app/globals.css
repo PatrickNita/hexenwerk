@@ -1353,8 +1353,8 @@ body::before {
   .line-panel--open .line-panel-box-player__frame {
     width: min(70cqw, 34cqh);
     height: min(70cqw, 34cqh);
-    min-width: 100%;
-    min-height: 100%;
+    min-width: 90%;
+    min-height: 90%;
   }
 
   .line-panel-btn {

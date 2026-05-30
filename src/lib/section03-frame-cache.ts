@@ -6,7 +6,12 @@ import {
 
 const PRELOAD_CONCURRENCY = 8;
 
-const frameCache = new Map<string, HTMLImageElement>();
+type CachedFrame = {
+  image: HTMLImageElement;
+  blobUrl: string;
+};
+
+const frameCache = new Map<string, CachedFrame>();
 let preloadPromise: Promise<void> | null = null;
 let framesReady = false;
 
@@ -24,8 +29,21 @@ async function loadAndDecodeFrame(
     return;
   }
 
+  const src = getSection03FrameSrc(lineId, frame);
+  let blobUrl = src;
+
+  try {
+    const response = await fetch(src);
+    if (response.ok) {
+      const blob = await response.blob();
+      blobUrl = URL.createObjectURL(blob);
+    }
+  } catch {
+    // Fall back to the HTTP URL when fetch fails (e.g. offline before preload).
+  }
+
   const img = new window.Image();
-  img.src = getSection03FrameSrc(lineId, frame);
+  img.src = blobUrl;
 
   await new Promise<void>((resolve) => {
     img.onload = () => resolve();
@@ -38,7 +56,7 @@ async function loadAndDecodeFrame(
     // Ignore decode errors for missing or slow frames.
   }
 
-  frameCache.set(key, img);
+  frameCache.set(key, { image: img, blobUrl });
 }
 
 async function runWithConcurrency(
@@ -97,5 +115,12 @@ export function getSection03FrameImage(
   lineId: string,
   frame: number,
 ): HTMLImageElement | undefined {
-  return frameCache.get(cacheKey(lineId, frame));
+  return frameCache.get(cacheKey(lineId, frame))?.image;
+}
+
+export function getSection03FrameBlobUrl(
+  lineId: string,
+  frame: number,
+): string | undefined {
+  return frameCache.get(cacheKey(lineId, frame))?.blobUrl;
 }
