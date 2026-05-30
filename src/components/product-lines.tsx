@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ProductLineBoxPlayer from "@/components/product-line-box-player";
 import { useCursorTheme } from "@/components/cursor-provider";
 import { getGlowSpriteColor } from "@/lib/fire-glow";
 import { getLineColorPair } from "@/lib/line-colors";
@@ -250,7 +251,9 @@ export default function ProductLines() {
               <h3 className="line-name">{line.name}</h3>
               <p className="line-blurb">{line.blurb}</p>
               {isOpen ? (
-                <div className="line-panel-actions">
+                <>
+                  <ProductLineBoxPlayer lineId={line.id} active={isOpen} />
+                  <div className="line-panel-actions">
                   <button
                     type="button"
                     className="line-panel-btn line-panel-btn--line"
@@ -265,7 +268,8 @@ export default function ProductLines() {
                   >
                     Explore All Products
                   </button>
-                </div>
+                  </div>
+                </>
               ) : null}
             </div>
           </li>

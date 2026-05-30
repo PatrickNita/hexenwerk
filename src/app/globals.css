@@ -1113,6 +1113,11 @@ body::before {
   font-size: 1rem;
 }
 
+.line-panel--open .line-panel-inner {
+  container-type: size;
+  container-name: line-panel-stage;
+}
+
 .line-panel-actions {
   display: flex;
   flex-direction: row;
@@ -1123,6 +1128,29 @@ body::before {
   padding-top: 1rem;
   position: relative;
   z-index: 1;
+  flex-shrink: 0;
+}
+
+.line-panel-box-player {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  align-self: stretch;
+  overflow: hidden;
+  place-items: center;
+}
+
+.line-panel-box-player__frame {
+  display: block;
+  width: min(62cqw, 40cqh);
+  height: min(62cqw, 40cqh);
+  object-fit: cover;
+  overflow: visible !important;
+  min-width: 50%;
+  min-height: 50%;
 }
 
   .line-panel-btn {
@@ -1307,8 +1335,15 @@ body::before {
   .line-panel--open .line-blurb {
     width: 100%;
     max-height: none;
-    flex: 1;
+    flex: none;
     overflow-y: auto;
+  }
+
+  .line-panel--open .line-panel-box-player__frame {
+    width: min(70cqw, 34cqh);
+    height: min(70cqw, 34cqh);
+    min-width: 100%;
+    min-height: 100%;
   }
 
   .line-panel-btn {
