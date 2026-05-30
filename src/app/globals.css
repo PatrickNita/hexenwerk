@@ -1100,7 +1100,7 @@ body::before {
 .line-panel--open .line-blurb {
   max-height: 8rem;
   opacity: 1;
-  margin-top: 1.5rem;
+  margin-top: 0rem;
   transition:
     max-height 100ms steps(2, end),
     opacity 0ms,
@@ -1347,6 +1347,7 @@ body::before {
     max-height: none;
     flex: none;
     overflow-y: auto;
+    margin-top: 0rem;
   }
 
   .line-panel--open .line-panel-box-player__frame {
