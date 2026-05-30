@@ -21,3 +21,7 @@ export function getSection03FrameSrcs(lineId: string): string[] {
     getSection03FrameSrc(lineId, index + 1),
   );
 }
+
+export function getAllSection03FrameSrcs(): string[] {
+  return SECTION03_LINE_IDS.flatMap((lineId) => getSection03FrameSrcs(lineId));
+}

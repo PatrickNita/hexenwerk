@@ -1,6 +1,7 @@
 "use client";
 
 import { delay, preloadImages } from "@/lib/preload-images";
+import { preloadSection03Frames } from "@/lib/section03-frame-cache";
 import { SITE_LOGO_SRC, SITE_PRELOAD_SRCS } from "@/lib/site-assets";
 import Image from "next/image";
 import {
@@ -33,7 +34,7 @@ export function SitePreloadProvider({ children }: { children: ReactNode }) {
 
     document.body.style.overflow = "hidden";
 
-    preloadImages(SITE_PRELOAD_SRCS)
+    Promise.all([preloadImages(SITE_PRELOAD_SRCS), preloadSection03Frames()])
       .then(() => delay(POST_LOAD_HOLD_MS))
       .then(() => {
         if (cancelled) {

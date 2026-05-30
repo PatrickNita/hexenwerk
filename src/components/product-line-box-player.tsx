@@ -1,12 +1,13 @@
 "use client";
 
+import { useSitePreload } from "@/components/site-preloader";
 import { getProductLineBoxFrame } from "@/lib/product-line-box-cycle";
-import { preloadImages } from "@/lib/preload-images";
 import {
-  getSection03FrameSrc,
-  getSection03FrameSrcs,
-} from "@/lib/section03-assets";
-import { useEffect, useRef, useState } from "react";
+  getSection03FrameImage,
+  isSection03FramesReady,
+} from "@/lib/section03-frame-cache";
+import { getSection03FrameSrc } from "@/lib/section03-assets";
+import { useEffect, useRef } from "react";
 
 type ProductLineBoxPlayerProps = {
   lineId: string;
@@ -17,48 +18,44 @@ export default function ProductLineBoxPlayer({
   lineId,
   active,
 }: ProductLineBoxPlayerProps) {
-  const imgRef = useRef<HTMLImageElement>(null);
-  const frameRef = useRef(1);
+  const { ready: siteReady } = useSitePreload();
+  const frameARef = useRef<HTMLImageElement>(null);
+  const frameBRef = useRef<HTMLImageElement>(null);
+  const frontIsARef = useRef(true);
+  const displayedFrameRef = useRef(0);
   const cycleStartRef = useRef(0);
   const rafRef = useRef<number | null>(null);
-  const [ready, setReady] = useState(false);
+  const applyInFlightRef = useRef(false);
+  const queuedFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!active) {
-      setReady(false);
-      frameRef.current = 1;
+    if (!active || !siteReady || !isSection03FramesReady()) {
+      displayedFrameRef.current = 0;
+      frontIsARef.current = true;
       return;
     }
 
-    let cancelled = false;
+    const frameA = frameARef.current;
+    const frameB = frameBRef.current;
+    const firstFrame = getSection03FrameImage(lineId, 1);
+    const initialSrc = firstFrame?.src ?? getSection03FrameSrc(lineId, 1);
 
-    preloadImages(getSection03FrameSrcs(lineId)).then(() => {
-      if (!cancelled) {
-        setReady(true);
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [active, lineId]);
-
-  useEffect(() => {
-    if (!active || !ready) {
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-      return;
+    if (frameA) {
+      frameA.src = initialSrc;
+      frameA.className =
+        "line-panel-box-player__frame line-panel-box-player__frame--front";
     }
+
+    if (frameB) {
+      frameB.src = initialSrc;
+      frameB.className =
+        "line-panel-box-player__frame line-panel-box-player__frame--back";
+    }
+
+    displayedFrameRef.current = 1;
+    frontIsARef.current = true;
 
     const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const img = imgRef.current;
-
-    if (img) {
-      frameRef.current = 1;
-      img.src = getSection03FrameSrc(lineId, 1);
-    }
 
     if (motionMedia.matches) {
       return;
@@ -66,20 +63,60 @@ export default function ProductLineBoxPlayer({
 
     cycleStartRef.current = performance.now();
 
-    const applyFrame = async (frame: number) => {
-      const element = imgRef.current;
-      if (!element || frameRef.current === frame) {
+    const swapToFrame = async (frame: number) => {
+      const cached = getSection03FrameImage(lineId, frame);
+      if (!cached) {
         return;
       }
 
-      frameRef.current = frame;
-      element.src = getSection03FrameSrc(lineId, frame);
+      const frontEl = frontIsARef.current ? frameARef.current : frameBRef.current;
+      const backEl = frontIsARef.current ? frameBRef.current : frameARef.current;
+
+      if (!frontEl || !backEl) {
+        return;
+      }
+
+      backEl.src = cached.src;
 
       try {
-        await element.decode();
+        await backEl.decode();
       } catch {
         // Ignore decode errors for missing or slow frames.
       }
+
+      frontEl.classList.remove("line-panel-box-player__frame--front");
+      frontEl.classList.add("line-panel-box-player__frame--back");
+      backEl.classList.remove("line-panel-box-player__frame--back");
+      backEl.classList.add("line-panel-box-player__frame--front");
+
+      frontIsARef.current = !frontIsARef.current;
+      displayedFrameRef.current = frame;
+    };
+
+    const applyFrame = async (frame: number) => {
+      if (frame === displayedFrameRef.current) {
+        return;
+      }
+
+      if (applyInFlightRef.current) {
+        queuedFrameRef.current = frame;
+        return;
+      }
+
+      applyInFlightRef.current = true;
+
+      let target = frame;
+
+      do {
+        queuedFrameRef.current = null;
+        await swapToFrame(target);
+        target = queuedFrameRef.current ?? 0;
+      } while (
+        target !== 0 &&
+        target !== displayedFrameRef.current
+      );
+
+      applyInFlightRef.current = false;
     };
 
     const tick = (now: number) => {
@@ -95,16 +132,28 @@ export default function ProductLineBoxPlayer({
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
       }
+
+      applyInFlightRef.current = false;
+      queuedFrameRef.current = null;
     };
-  }, [active, lineId, ready]);
+  }, [active, lineId, siteReady]);
+
+  const initialSrc = getSection03FrameSrc(lineId, 1);
 
   return (
     <div className="line-panel-box-player" aria-hidden={!active}>
       <img
-        ref={imgRef}
-        src={getSection03FrameSrc(lineId, 1)}
+        ref={frameARef}
+        src={initialSrc}
         alt=""
-        className="line-panel-box-player__frame"
+        className="line-panel-box-player__frame line-panel-box-player__frame--front"
+      />
+      <img
+        ref={frameBRef}
+        src={initialSrc}
+        alt=""
+        className="line-panel-box-player__frame line-panel-box-player__frame--back"
+        aria-hidden
       />
     </div>
   );

@@ -1145,12 +1145,22 @@ body::before {
 
 .line-panel-box-player__frame {
   display: block;
+  grid-area: 1 / 1;
   width: min(62cqw, 40cqh);
   height: min(62cqw, 40cqh);
   object-fit: cover;
   overflow: visible !important;
   min-width: 50%;
   min-height: 50%;
+  transform: translateZ(0);
+}
+
+.line-panel-box-player__frame--front {
+  opacity: 1;
+}
+
+.line-panel-box-player__frame--back {
+  opacity: 0;
 }
 
   .line-panel-btn {
