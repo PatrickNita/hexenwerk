@@ -1,13 +1,12 @@
 "use client";
 
 import { useCursorTheme } from "@/components/cursor-provider";
-import StatementCandleLayer from "@/components/statement-candle-layer";
+import StatementFireCanvas from "@/components/statement-fire-canvas";
 import {
   StatementArtboardRuntimeProvider,
   useStatementArtboardRuntime,
 } from "@/components/statement-artboard-runtime";
 import StatementLightningLayer from "@/components/statement-lightning-witches";
-import StatementLogLayer from "@/components/statement-log-layer";
 import {
   SECTION02_BG_SRC,
   SECTION02_PRODUCT_SRC,
@@ -30,8 +29,7 @@ function StatementArtboardContent() {
         priority
       />
       <div ref={registerFireGlow} className="statement-fire-glow">
-        <StatementLogLayer />
-        <StatementCandleLayer />
+        <StatementFireCanvas />
         <StatementLightningLayer />
       </div>
       <Image

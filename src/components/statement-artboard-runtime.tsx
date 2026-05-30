@@ -1,18 +1,19 @@
 "use client";
 
 import { useCursorTheme } from "@/components/cursor-provider";
+import { useSitePreload } from "@/components/site-preloader";
 import {
   applyFireGlowVars,
   computeFireGlowCycle,
+  getGlowDisplayColor,
   getGlowSpriteColor,
 } from "@/lib/fire-glow";
 import {
-  SECTION02_CANDLE_FRAME_NUMBERS,
   SECTION02_CANDLE_FRAME_SRCS,
   SECTION02_LOG_FRAME_MS,
   SECTION02_LOG_FRAME_SRCS,
 } from "@/lib/section02-assets";
-import { useSitePreload } from "@/components/site-preloader";
+import { renderSection02FireFrame } from "@/lib/section02-canvas-compositor";
 import {
   createContext,
   useCallback,
@@ -23,19 +24,10 @@ import {
   type ReactNode,
 } from "react";
 
-const GLOW_UPDATE_MS = 1000 / 15;
-
 type AppliedGlow = {
   fillColor: string;
   brightness: string;
   strength: string;
-};
-
-type SpriteElements = {
-  logImg: HTMLImageElement | null;
-  logGlow: HTMLDivElement | null;
-  candleImg: HTMLImageElement | null;
-  candleGlow: HTMLDivElement | null;
 };
 
 type StatementArtboardRuntimeContextValue = {
@@ -43,14 +35,11 @@ type StatementArtboardRuntimeContextValue = {
   spritesReady: boolean;
   registerProduct: (el: HTMLImageElement | null) => void;
   registerFireGlow: (el: HTMLDivElement | null) => void;
-  registerLogSprite: (
-    img: HTMLImageElement | null,
-    glow: HTMLDivElement | null,
+  registerFireCanvas: (
+    canvas: HTMLCanvasElement | null,
+    container: HTMLDivElement | null,
   ) => void;
-  registerCandleSprite: (
-    img: HTMLImageElement | null,
-    glow: HTMLDivElement | null,
-  ) => void;
+  registerLightning: (el: HTMLDivElement | null) => void;
 };
 
 const StatementArtboardRuntimeContext =
@@ -96,20 +85,78 @@ export function StatementArtboardRuntimeProvider({
   const [isActive, setIsActive] = useState(false);
   const [spritesReady, setSpritesReady] = useState(false);
   const spritesReadyRef = useRef(false);
+  const spritesInitializedRef = useRef(false);
 
   const productRef = useRef<HTMLImageElement | null>(null);
   const fireGlowRef = useRef<HTMLDivElement | null>(null);
-  const spriteRefs = useRef<SpriteElements>({
-    logImg: null,
-    logGlow: null,
-    candleImg: null,
-    candleGlow: null,
-  });
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const lightningRef = useRef<HTMLDivElement | null>(null);
   const logFrameIndexRef = useRef(0);
   const candleFrameIndexRef = useRef(0);
-  const glowIntervalRef = useRef<number | null>(null);
   const spriteIntervalRef = useRef<number | null>(null);
   const glowCacheRef = useRef<Record<string, AppliedGlow>>({});
+  const renderFrameRef = useRef<(now: number) => void>(() => undefined);
+
+  const paintFireCanvas = useCallback((now: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return;
+    }
+
+    const lineId = activeLineIdRef.current;
+    const glowColor = getGlowDisplayColor(now, lineId);
+
+    renderSection02FireFrame(ctx, {
+      logIndex: logFrameIndexRef.current,
+      candleIndex: candleFrameIndexRef.current,
+      glowColor,
+      width: canvas.width,
+      height: canvas.height,
+    });
+  }, []);
+
+  const applyGlowState = useCallback((now: number) => {
+    const lineId = activeLineIdRef.current;
+    const glow = computeFireGlowCycle(now, lineId);
+    const fillColor = getGlowSpriteColor(now, lineId);
+    const cache = glowCacheRef.current;
+
+    applyGlowIfChanged(
+      lightningRef.current,
+      "lightning",
+      glow,
+      fillColor,
+      cache,
+    );
+
+    const product = productRef.current;
+    if (product) {
+      const prev = cache.shadow;
+      if (!prev || prev.fillColor !== fillColor) {
+        product.style.setProperty("--product-shadow-color", fillColor);
+        cache.shadow = {
+          fillColor,
+          brightness: "",
+          strength: "",
+        };
+      }
+    }
+  }, []);
+
+  const renderFrame = useCallback(
+    (now: number) => {
+      paintFireCanvas(now);
+      applyGlowState(now);
+    },
+    [applyGlowState, paintFireCanvas],
+  );
+
+  renderFrameRef.current = renderFrame;
 
   const registerProduct = useCallback((el: HTMLImageElement | null) => {
     productRef.current = el;
@@ -122,63 +169,58 @@ export function StatementArtboardRuntimeProvider({
     }
   }, []);
 
-  const registerLogSprite = useCallback(
-    (img: HTMLImageElement | null, glow: HTMLDivElement | null) => {
-      spriteRefs.current.logImg = img;
-      spriteRefs.current.logGlow = glow;
+  const registerFireCanvas = useCallback(
+    (canvas: HTMLCanvasElement | null, _container: HTMLDivElement | null) => {
+      canvasRef.current = canvas;
+
+      if (canvas && spritesInitializedRef.current) {
+        renderFrameRef.current(performance.now());
+      }
     },
     [],
   );
 
-  const registerCandleSprite = useCallback(
-    (img: HTMLImageElement | null, glow: HTMLDivElement | null) => {
-      spriteRefs.current.candleImg = img;
-      spriteRefs.current.candleGlow = glow;
-    },
-    [],
-  );
+  const registerLightning = useCallback((el: HTMLDivElement | null) => {
+    lightningRef.current = el;
 
-  const applySpriteFrames = useCallback((reset = false) => {
-    if (reset) {
-      logFrameIndexRef.current = 0;
-      candleFrameIndexRef.current = 0;
-    }
-
-    const { logImg, logGlow, candleImg, candleGlow } = spriteRefs.current;
-    const logIndex = logFrameIndexRef.current;
-    const candleIndex = candleFrameIndexRef.current;
-
-    if (logImg) {
-      logImg.src = SECTION02_LOG_FRAME_SRCS[logIndex];
-    }
-
-    if (logGlow) {
-      logGlow.className = `statement-log-glow-frame statement-log-glow-frame--${logIndex + 1} statement-log-glow-frame--active`;
-    }
-
-    if (candleImg) {
-      candleImg.src = SECTION02_CANDLE_FRAME_SRCS[candleIndex];
-    }
-
-    if (candleGlow) {
-      const frameNumber = SECTION02_CANDLE_FRAME_NUMBERS[candleIndex];
-      candleGlow.className = `statement-candle-glow-frame statement-candle-glow-frame--${frameNumber} statement-candle-glow-frame--active`;
+    if (el) {
+      renderFrameRef.current(performance.now());
     }
   }, []);
 
   useEffect(() => {
     activeLineIdRef.current = activeLineId;
     glowCacheRef.current = {};
+    renderFrameRef.current(performance.now());
   }, [activeLineId]);
 
   useEffect(() => {
-    if (!siteReady) {
+    if (!siteReady || spritesInitializedRef.current) {
       return;
     }
 
-    setSpritesReady(true);
-    spritesReadyRef.current = true;
-    fireGlowRef.current?.classList.add("statement-fire-glow--ready");
+    let cancelled = false;
+
+    const initSprites = () => {
+      logFrameIndexRef.current = 0;
+      candleFrameIndexRef.current = 0;
+      renderFrameRef.current(performance.now());
+
+      if (cancelled) {
+        return;
+      }
+
+      spritesInitializedRef.current = true;
+      spritesReadyRef.current = true;
+      setSpritesReady(true);
+      fireGlowRef.current?.classList.add("statement-fire-glow--ready");
+    };
+
+    initSprites();
+
+    return () => {
+      cancelled = true;
+    };
   }, [siteReady]);
 
   useEffect(() => {
@@ -204,70 +246,12 @@ export function StatementArtboardRuntimeProvider({
   useEffect(() => {
     const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    const applyAll = (now: number) => {
-      const lineId = activeLineIdRef.current;
-      const glow = computeFireGlowCycle(now, lineId);
-      const fillColor = getGlowSpriteColor(now, lineId);
-      const cache = glowCacheRef.current;
-
-      applyGlowIfChanged(
-        fireGlowRef.current,
-        "fireGlow",
-        glow,
-        fillColor,
-        cache,
-      );
-
-      const product = productRef.current;
-      if (product) {
-        const prev = cache.shadow;
-        if (!prev || prev.fillColor !== fillColor) {
-          product.style.setProperty("--product-shadow-color", fillColor);
-          cache.shadow = {
-            fillColor,
-            brightness: "",
-            strength: "",
-          };
-        }
-      }
-    };
-
-    applyAll(performance.now());
-
-    if (glowIntervalRef.current !== null) {
-      window.clearInterval(glowIntervalRef.current);
-      glowIntervalRef.current = null;
-    }
-
-    if (isActive && !motionMedia.matches) {
-      glowIntervalRef.current = window.setInterval(() => {
-        applyAll(performance.now());
-      }, GLOW_UPDATE_MS);
-    }
-
-    return () => {
-      if (glowIntervalRef.current !== null) {
-        window.clearInterval(glowIntervalRef.current);
-        glowIntervalRef.current = null;
-      }
-    };
-  }, [isActive]);
-
-  useEffect(() => {
-    const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
-
     if (spriteIntervalRef.current !== null) {
       window.clearInterval(spriteIntervalRef.current);
       spriteIntervalRef.current = null;
     }
 
-    if (!spritesReady) {
-      return;
-    }
-
-    applySpriteFrames(true);
-
-    if (!isActive || motionMedia.matches) {
+    if (!spritesReady || !isActive || motionMedia.matches) {
       return;
     }
 
@@ -276,7 +260,7 @@ export function StatementArtboardRuntimeProvider({
         (logFrameIndexRef.current + 1) % SECTION02_LOG_FRAME_SRCS.length;
       candleFrameIndexRef.current =
         (candleFrameIndexRef.current + 1) % SECTION02_CANDLE_FRAME_SRCS.length;
-      applySpriteFrames();
+      renderFrameRef.current(performance.now());
     }, SECTION02_LOG_FRAME_MS);
 
     return () => {
@@ -285,15 +269,15 @@ export function StatementArtboardRuntimeProvider({
         spriteIntervalRef.current = null;
       }
     };
-  }, [applySpriteFrames, isActive, spritesReady]);
+  }, [isActive, spritesReady]);
 
   const value: StatementArtboardRuntimeContextValue = {
     isActive,
     spritesReady,
     registerProduct,
     registerFireGlow,
-    registerLogSprite,
-    registerCandleSprite,
+    registerFireCanvas,
+    registerLightning,
   };
 
   return (

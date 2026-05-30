@@ -770,9 +770,24 @@ body.custom-cursor-active * {
   visibility: visible;
 }
 
+.statement-fire-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.statement-fire-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .statement-lightning {
   position: absolute;
   inset: 0;
+  z-index: 4;
   pointer-events: none;
   background-color: var(--statement-lightning-color);
   background-image: none;
@@ -786,136 +801,6 @@ body.custom-cursor-active * {
   mask-position: center bottom;
   -webkit-mask-mode: luminance;
   mask-mode: luminance;
-}
-
-.statement-artboard__layer--log {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  isolation: isolate;
-  contain: paint;
-  pointer-events: none;
-}
-
-.statement-log-frame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  object-position: center bottom;
-  visibility: hidden;
-  pointer-events: none;
-  image-rendering: -webkit-optimize-contrast;
-}
-
-.statement-log-frame--active {
-  visibility: visible;
-}
-
-.statement-artboard__layer--candles {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  isolation: isolate;
-  contain: paint;
-  pointer-events: none;
-}
-
-.statement-candle-glow-frame {
-  position: absolute;
-  inset: 0;
-  mix-blend-mode: darken;
-  visibility: hidden;
-  pointer-events: none;
-  background-color: var(--statement-lightning-color);
-  background-image: none;
-  opacity: var(--statement-lightning-strength);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-position: center bottom;
-  mask-position: center bottom;
-  -webkit-mask-mode: alpha;
-  mask-mode: alpha;
-}
-
-.statement-candle-glow-frame--active {
-  visibility: visible;
-}
-
-.statement-candle-glow-frame--2 {
-  -webkit-mask-image: url("/assets/section02/candles-glow2.png?v=1");
-  mask-image: url("/assets/section02/candles-glow2.png?v=1");
-}
-
-.statement-candle-glow-frame--3 {
-  -webkit-mask-image: url("/assets/section02/candles-glow3.png?v=1");
-  mask-image: url("/assets/section02/candles-glow3.png?v=1");
-}
-
-.statement-candle-glow-frame--4 {
-  -webkit-mask-image: url("/assets/section02/candles-glow4.png?v=1");
-  mask-image: url("/assets/section02/candles-glow4.png?v=1");
-}
-
-.statement-log-glow-frame {
-  position: absolute;
-  inset: 0;
-  mix-blend-mode: darken;
-  visibility: hidden;
-  pointer-events: none;
-  background-color: var(--statement-lightning-color);
-  background-image: none;
-  opacity: var(--statement-lightning-strength);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-position: center bottom;
-  mask-position: center bottom;
-  -webkit-mask-mode: alpha;
-  mask-mode: alpha;
-}
-
-.statement-log-glow-frame--active {
-  visibility: visible;
-}
-
-.statement-log-glow-frame--1 {
-  -webkit-mask-image: url("/assets/section02/log-glow1.png?v=1");
-  mask-image: url("/assets/section02/log-glow1.png?v=1");
-}
-
-.statement-log-glow-frame--2 {
-  -webkit-mask-image: url("/assets/section02/log-glow2.png?v=1");
-  mask-image: url("/assets/section02/log-glow2.png?v=1");
-}
-
-.statement-log-glow-frame--3 {
-  -webkit-mask-image: url("/assets/section02/log-glow3.png?v=1");
-  mask-image: url("/assets/section02/log-glow3.png?v=1");
-}
-
-.statement-log-glow-frame--4 {
-  -webkit-mask-image: url("/assets/section02/log-glow4.png?v=1");
-  mask-image: url("/assets/section02/log-glow4.png?v=1");
-}
-
-.statement-log-glow-frame--5 {
-  -webkit-mask-image: url("/assets/section02/log-glow5.png?v=1");
-  mask-image: url("/assets/section02/log-glow5.png?v=1");
-}
-
-.statement-log-glow-frame--6 {
-  -webkit-mask-image: url("/assets/section02/log-glow6.png?v=1");
-  mask-image: url("/assets/section02/log-glow6.png?v=1");
-}
-
-.statement-log-glow-frame--7 {
-  -webkit-mask-image: url("/assets/section02/log-glow7.png?v=1");
-  mask-image: url("/assets/section02/log-glow7.png?v=1");
 }
 
 @keyframes statement-product-float {
@@ -950,19 +835,10 @@ body.custom-cursor-active * {
 }
 
 @media (max-width: 767px) {
-  .statement-artboard__layer--log,
-  .statement-artboard__layer--candles {
-    contain: none;
-  }
-
   .statement-artboard__product {
     width: min(18.7%, 238px);
     top: 24%;
   }
-}
-
-.statement-lightning {
-  z-index: 4;
 }
 
 .statement-fire-hit {
