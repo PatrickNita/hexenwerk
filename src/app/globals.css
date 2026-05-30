@@ -1349,6 +1349,14 @@ body.custom-cursor-active * {
     min-width: 90%;
   }
 
+  .line-panel--open[data-line="gastronomy"] .line-panel-box-player__frame {
+    min-width: 75%;
+  }
+
+  .line-panel--open[data-line="perfumery"] .line-panel-box-player__frame {
+    min-width: 90%;
+  }
+
   .line-panel-btn {
     padding: 0.4375rem 0.625rem;
     font-size: 9px;
