@@ -16,7 +16,7 @@ import Image from "next/image";
 
 function StatementArtboardContent() {
   const { registerProduct, registerFireGlow } = useStatementArtboardRuntime();
-  const { pinnedLineId, setActiveLineId } = useCursorTheme();
+  const { pinnedLineId, activeLineId, setActiveLineId } = useCursorTheme();
 
   return (
     <div className="statement-artboard">
@@ -48,10 +48,12 @@ function StatementArtboardContent() {
       <div
         className="statement-fire-hit"
         aria-hidden
-        onPointerEnter={(event) => {
-          if (event.pointerType === "mouse" && pinnedLineId === null) {
-            setActiveLineId("fire");
+        onClick={() => {
+          if (pinnedLineId !== null) {
+            return;
           }
+
+          setActiveLineId(activeLineId === "fire" ? null : "fire");
         }}
       />
     </div>

@@ -79,7 +79,7 @@ body.custom-cursor-active * {
 
   .statement-artboard__product {
     animation: none;
-    top: 14%;
+    top: 20%;
     transform: translate(-50%, 0);
   }
 
@@ -925,7 +925,7 @@ body.custom-cursor-active * {
   }
 
   50% {
-    transform: translate(-50%, -1%);
+    transform: translate(-50%, -2.5%);
   }
 }
 
@@ -933,7 +933,7 @@ body.custom-cursor-active * {
   --product-shadow-color: #f27507;
   position: absolute;
   left: 50%;
-  top: 14%;
+  top: 20%;
   z-index: 6;
   width: min(19.8%, 252px);
   height: auto;
@@ -957,7 +957,7 @@ body.custom-cursor-active * {
 
   .statement-artboard__product {
     width: min(18.7%, 238px);
-    top: 18%;
+    top: 24%;
   }
 }
 
@@ -973,6 +973,7 @@ body.custom-cursor-active * {
   height: var(--statement-fire-hit-height, 18%);
   z-index: 8;
   pointer-events: auto;
+  cursor: pointer;
   background: transparent;
   transform: translate(-50%, calc(-1 * var(--statement-fire-lift, -15px)));
 }
@@ -1151,6 +1152,13 @@ body.custom-cursor-active * {
 
 .line-panel-box-player__frame--back {
   opacity: 0;
+}
+
+@media (min-width: 768px) {
+  .line-panel-box-player__frame {
+    min-width: 55%;
+    min-height: 55%;
+  }
 }
 
   .line-panel-btn {
