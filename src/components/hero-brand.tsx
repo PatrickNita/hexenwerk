@@ -1,11 +1,12 @@
 import Image from "next/image";
 import PixelHeading from "@/components/pixel-heading";
+import { SITE_LOGO_SRC } from "@/lib/site-assets";
 
 export default function HeroBrand() {
   return (
     <div className="hero-brand">
       <Image
-        src="/assets/brand/hexenwerk-logo.webp"
+        src={SITE_LOGO_SRC}
         alt="HEXENWERK"
         width={176}
         height={38}

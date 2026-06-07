@@ -29,10 +29,10 @@ function themeFromLinePair(id: LineColorId): CursorTheme {
 export const CURSOR_THEMES: Record<string, CursorTheme> = {
   default: {
     id: "default",
-    particles: ["#ffffff", "#cccccc", "#888888", "#555555", "#333333"],
-    core: "#eeeeee",
-    hot: "#ffffff",
-    tick: "#666666",
+    particles: ["#000000", "#000000", "#000000", "#000000", "#000000"],
+    core: "#000000",
+    hot: "#000000",
+    tick: "#000000",
   },
   beverage: themeFromLinePair("beverage"),
   botanical: themeFromLinePair("botanical"),
