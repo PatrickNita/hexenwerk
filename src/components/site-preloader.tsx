@@ -1,7 +1,6 @@
 "use client";
 
 import { delay, preloadImages } from "@/lib/preload-images";
-import { preloadSection02Frames } from "@/lib/section02-frame-cache";
 import { preloadSection03Frames } from "@/lib/section03-frame-cache";
 import { SITE_LOGO_SRC, SITE_PRELOAD_SRCS } from "@/lib/site-assets";
 import Image from "next/image";
@@ -37,7 +36,6 @@ export function SitePreloadProvider({ children }: { children: ReactNode }) {
 
     Promise.all([
       preloadImages(SITE_PRELOAD_SRCS),
-      preloadSection02Frames(),
       preloadSection03Frames(),
     ])
       .then(() => delay(POST_LOAD_HOLD_MS))

@@ -4,7 +4,6 @@ import HeroSpec from "@/components/hero-spec";
 import ProductLines from "@/components/product-lines";
 import ScrollAwareHeader from "@/components/scroll-aware-header";
 import SectionCrumb from "@/components/section-crumb";
-import StatementArtboard from "@/components/statement-artboard";
 
 export default function Home() {
   const year = new Date().getFullYear();
@@ -35,11 +34,6 @@ export default function Home() {
         <section id="s2" className="snap-section snap-section--statement">
           <div className="statement-crumb-band">
             <SectionCrumb label="The Product" meta="02" />
-          </div>
-          <div className="statement-stage">
-            <div className="statement-bg-wrap">
-              <StatementArtboard />
-            </div>
           </div>
         </section>
 

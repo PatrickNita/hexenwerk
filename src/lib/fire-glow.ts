@@ -46,41 +46,7 @@ const PHASE_MS = 1000;
 const CYCLE_MS = PHASE_MS * PHASE_ORDER.length;
 
 const GLOW_BRIGHTNESS = 1.35;
-const GLOW_CONTRAST = 1.28;
 const GLOW_STRENGTH = 1;
-
-function clamp01(value: number) {
-  return Math.max(0, Math.min(1, value));
-}
-
-/** Matches CSS `brightness(n) contrast(c)` applied to glow layers. */
-export function applyGlowDisplayColor(hex: string, brightness: number): string {
-  const { r, g, b } = parseHex(hex);
-  let rn = clamp01((r / 255) * brightness);
-  let gn = clamp01((g / 255) * brightness);
-  let bn = clamp01((b / 255) * brightness);
-  rn = clamp01((rn - 0.5) * GLOW_CONTRAST + 0.5);
-  gn = clamp01((gn - 0.5) * GLOW_CONTRAST + 0.5);
-  bn = clamp01((bn - 0.5) * GLOW_CONTRAST + 0.5);
-
-  return rgbToHex(rn * 255, gn * 255, bn * 255);
-}
-
-export function getGlowDisplayColor(now: number, lineId?: string | null): string {
-  return applyGlowDisplayColor(
-    getGlowSpriteColor(now, lineId),
-    glowBrightness(lineId),
-  );
-}
-
-const IDLE_GLOW: FireGlowState = {
-  phase: "darkOrange",
-  hot: GLOW_DARK_ORANGE.hot,
-  mid: GLOW_DARK_ORANGE.mid,
-  cool: GLOW_DARK_ORANGE.cool,
-  brightness: GLOW_BRIGHTNESS,
-  strength: GLOW_STRENGTH,
-};
 
 function parseHex(hex: string) {
   const normalized = hex.replace("#", "");
@@ -226,46 +192,4 @@ export function getGlowSpriteColor(now: number, lineId?: string | null): string 
   }
 
   return computeFireGlowCycle(now, lineId).hot;
-}
-
-export function getGlowEmberColor(now: number, lineId?: string | null): string {
-  return getGlowSpriteColor(now, lineId);
-}
-
-export function applyFireGlowVars(
-  element: HTMLElement | null | undefined,
-  glow: FireGlowState,
-  fillColor: string,
-) {
-  if (!element) {
-    return;
-  }
-
-  const displayColor = applyGlowDisplayColor(fillColor, glow.brightness);
-  element.style.setProperty("--statement-lightning-color", displayColor);
-  element.style.setProperty(
-    "--statement-lightning-strength",
-    glow.strength.toFixed(3),
-  );
-}
-
-export function applyFireGlowToElement(
-  element: HTMLElement | null | undefined,
-  glow: FireGlowState,
-  fillColor: string,
-) {
-  if (!element) {
-    return;
-  }
-
-  const displayColor = applyGlowDisplayColor(fillColor, glow.brightness);
-  applyFireGlowVars(element, glow, fillColor);
-  element.style.backgroundImage = "none";
-  element.style.backgroundColor = displayColor;
-  element.style.opacity = glow.strength.toFixed(3);
-  element.style.filter = "none";
-}
-
-export function defaultFireGlow(): FireGlowState {
-  return { ...IDLE_GLOW };
 }
